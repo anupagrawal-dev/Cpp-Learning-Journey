@@ -46,7 +46,7 @@ The topics are arranged sequentially from basic to advanced.
 - `local_static_variables/` - Local static variables and scope.
 - `strings_manipulation/` - Working with C++ string operations.
 
-### 🔹 **6_Libraries_and_Compilation/** (Building and Linking)
+### 🔹 **5_Libraries_and_Compilation/** (Building and Linking)
 - `static_libraries/` - Creating and using static libraries.
 - `shared_libraries/` - Implementing shared libraries.
 
