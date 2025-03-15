@@ -7,52 +7,48 @@ Each topic has a dedicated folder, following a structured format with `src/`, `h
 
 ## 📂 Folder Structure
 
-Each section contains multiple topic folders. To navigate:
-```
-cd <section_folder>/<topic_folder>
-```
+The topics are arranged sequentially from basic to advanced.
 
-### 🔹 **Fundamentals**
-- `fundamentals/logger_debugging/` - Implementing logging and debugging techniques.
-- `fundamentals/class_basics/` - Introduction to classes and objects in C++.
-- `fundamentals/advanced_classes/` - Deep dive into class features.
-- `fundamentals/static_classes/` - Understanding static members and classes.
-- `fundamentals/enums_basics/` - Basics of enumerations.
-- `fundamentals/enums_with_logs/` - Using enums in logging mechanisms.
+### 🔹 **1_Basics/** (Fundamental Concepts)
+- `logger_debugging/` - Implementing logging and debugging techniques.
+- `class_basics/` - Introduction to classes and objects in C++.
+- `advanced_classes/` - Deep dive into class features.
+- `static_classes/` - Understanding static members and classes.
+- `enums_basics/` - Basics of enumerations.
+- `enums_with_logs/` - Using enums in logging mechanisms.
+- `arrow_operator/` - Using the arrow operator with pointers.
+- `sizeof_operator_usage/` - Using the `sizeof` operator.
+- `ternary_operator/` - Working with the ternary operator.
 
-### 🔹 **OOP Concepts**
-- `oop_concepts/constructors_destructors/` - Understanding constructors and destructors.
-- `oop_concepts/destructor_basics/` - Detailed behavior of destructors.
-- `oop_concepts/inheritance_oop/` - Implementing inheritance in C++.
-- `oop_concepts/setters_getters/` - Using setter and getter functions.
-- `oop_concepts/this_pointer_usage/` - Understanding the `this` pointer.
-- `oop_concepts/object_lifetime_memory/` - Object creation and destruction lifecycle.
-- `oop_concepts/copy_constructor/` - Deep vs. shallow copy concepts.
+### 🔹 **2_OOP_Fundamentals/** (Core Object-Oriented Programming)
+- `constructors_destructors/` - Understanding constructors and destructors.
+- `setters_getters/` - Using setter and getter functions.
+- `copy_constructor/` - Deep vs. shallow copy concepts.
+- `const_basics/` - Using `const` in different contexts.
+- `const_class_and_functions/` - Applying `const` to classes and functions.
+- `constructor_initializer_list/` - Using initializer lists in constructors.
 
-### 🔹 **Memory Management**
-- `memory_management/arrays_basics/` - Introduction to arrays.
-- `memory_management/arrays_advanced/` - Advanced array concepts.
-- `memory_management/dynamic_arrays_vectors/` - Using dynamic arrays.
-- `memory_management/smart_pointers/` - Using unique, shared, and weak pointers.
-- `memory_management/custom_string_class/` - Implementing a custom string class.
+### 🔹 **3_Advanced_OOP/** (Advanced Object-Oriented Concepts)
+- `virtual_functions_pointers/` - Understanding virtual functions and pointers.
+- `interfaces_abstract_classes/` - Interfaces and abstract classes.
+- `operator_overloading/` - Overloading operators.
+- `multiple_return_values/` - Methods for returning multiple values.
+- `inheritance_oop/` - Implementing inheritance in C++.
+- `destructor_basics/` - Detailed behavior of destructors.
+- `object_lifetime_memory/` - Object creation and destruction lifecycle.
 
-### 🔹 **Advanced Topics**
-- `advanced_topics/virtual_functions_pointers/` - Understanding virtual functions and pointers.
-- `advanced_topics/interfaces_abstract_classes/` - Interfaces and abstract classes.
-- `advanced_topics/operator_overloading/` - Overloading operators.
-- `advanced_topics/arrow_operator/` - Using the arrow operator with pointers.
-- `advanced_topics/ternary_operator/` - Working with the ternary operator.
-- `advanced_topics/sizeof_operator_usage/` - Using the `sizeof` operator.
-- `advanced_topics/const_basics/` - Using `const` in different contexts.
-- `advanced_topics/const_class_and_functions/` - Applying `const` to classes and functions.
-- `advanced_topics/constructor_initializer_list/` - Using initializer lists in constructors.
-- `advanced_topics/implicit_explicit_keywords/` - Understanding implicit and explicit keyword behavior.
-- `advanced_topics/multiple_return_values/` - Methods for returning multiple values.
-- `advanced_topics/local_static_variables/` - Local static variables and scope.
+### 🔹 **4_Memory_Management/** (Efficient Memory Handling)
+- `arrays_basics/` - Introduction to arrays.
+- `arrays_advanced/` - Advanced array concepts.
+- `dynamic_arrays_vectors/` - Using dynamic arrays.
+- `smart_pointers/` - Using unique, shared, and weak pointers.
+- `custom_string_class/` - Implementing a custom string class.
+- `local_static_variables/` - Local static variables and scope.
+- `strings_manipulation/` - Working with C++ string operations.
 
-### 🔹 **C++ Libraries and Compilation**
-- `libraries_and_compilation/static_libraries/` - Creating and using static libraries.
-- `libraries_and_compilation/shared_libraries/` - Implementing shared libraries.
+### 🔹 **6_Libraries_and_Compilation/** (Building and Linking)
+- `static_libraries/` - Creating and using static libraries.
+- `shared_libraries/` - Implementing shared libraries.
 
 ---
 
@@ -69,11 +65,11 @@ make
 ```
 For example:
 ```sh
-cd fundamentals/class_basics
+cd 1_Basics/class_basics
 mkdir build && cd build
 cmake ..
 make
-./ClassBasicsExecutable  # Replace with the actual executable name
+./Main # Replace with the actual executable name
 ```
 
 ---
