@@ -70,11 +70,11 @@ int main()
 }
 ```
 
-It is kinda similar const keyword variables. But, const keyword are not replace with actual values they will occupy specific memory for each variable. And get value from stack of that respective variable.
+It is kinda similar to const keyword variables. But, const keyword are not replaced with actual values they will occupy specific memory for each variable. And get value from stack of that respective variable.
 
-Even you can keep macros for any kinds c++ syntax as well. But, that is correct way or use of macros.
+Even you can keep macros for any kinds of c++ syntax as well. But, that is NOT correct way/use of macros.
 
-I can create even macro functions which will make code more readable.
+We can use macro functions also which will make code more readable.
 
 E.g.
 
