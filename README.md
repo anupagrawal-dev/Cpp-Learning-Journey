@@ -3,6 +3,8 @@
 This repository contains my structured C++ learning journey inspired by Cherno’s YouTube tutorials. 
 Each topic has a dedicated folder, following a structured format with `src/`, `header/`, and `CMakeLists.txt` files.
 
+Additionally, each folder includes a **Learnings.md** file that documents key concepts and explanations related to the topic and its code.
+
 ---
 
 ## 📂 Folder Structure
