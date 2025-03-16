@@ -16,6 +16,7 @@ The topics are arranged sequentially from basic to advanced.
 - `static_classes/` - Understanding static members and classes.
 - `enums_basics/` - Basics of enumerations.
 - `enums_with_logs/` - Using enums in logging mechanisms.
+- `Macros/` - Understanding Macros and Macro functions.
 - `arrow_operator/` - Using the arrow operator with pointers.
 - `sizeof_operator_usage/` - Using the `sizeof` operator.
 - `ternary_operator/` - Working with the ternary operator.
@@ -86,7 +87,7 @@ Or
 - Mastering C++ fundamentals and object-oriented programming.
 - Understanding pointers, memory management, and smart pointers.
 - Using CMake to structure and build projects efficiently.
-- Implementing advanced C++ features like operator overloading, virtual functions, and custom libraries.
+- Implementing advanced C++ features like operator overloading, virtual functions, templates and custom libraries.
 
 ---
 
