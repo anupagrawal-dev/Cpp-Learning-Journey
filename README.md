@@ -46,7 +46,11 @@ The topics are arranged sequentially from basic to advanced.
 - `local_static_variables/` - Local static variables and scope.
 - `strings_manipulation/` - Working with C++ string operations.
 
-### 🔹 **5_Libraries_and_Compilation/** (Building and Linking)
+### 🔹 **5_Advanced_Topics/** (Advanced Programming)
+- `Templates/` - Working with templates, exploring function and class templates.
+
+
+### 🔹 **6_Libraries_and_Compilation/** (Building and Linking)
 - `static_libraries/` - Creating and using static libraries.
 - `shared_libraries/` - Implementing shared libraries.
 
@@ -70,6 +74,10 @@ mkdir build && cd build
 cmake ..
 make
 ./Main # Replace with the actual executable name
+
+Or
+
+./bin/Main # At initial i have created binary file directly where we do compilation. Later on started putting Executable files inside bin folder.Replace Main with the actual executable name.
 ```
 
 ---
