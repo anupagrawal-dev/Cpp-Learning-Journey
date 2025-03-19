@@ -14,13 +14,16 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y cmake g++  # Install CMake and compiler
 
       - name: List repository files (for debugging)
-        run: ls -la
+        run: ls -R  # List all files to verify structure
 
       - name: Build all C++ topic folders
         run: |
-          for dir in $(find . -name "CMakeLists.txt" -exec dirname {} \;); do
+          for dir in $(find . -mindepth 2 -name "CMakeLists.txt" -exec dirname {} \;); do
             echo "Building $dir..."
-            cmake -B $dir/build -S $dir
-            cmake --build $dir/build
+            mkdir -p $dir/build
+            cd $dir/build
+            cmake ..
+            cmake --build .
+            cd -  # Return to root directory
           done
 
