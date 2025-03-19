@@ -2,18 +2,31 @@
 
 class Entity{
     
-    public:
-        int x;
-        int y;
+public:
+    int x;
+    int y;
 
-    Entity() = delete;
-    
-   /* Entity()
+    Entity()
     {
-        x=0;
-        y=0;
+        cout<<"Constructor Called !!"<<endl;
+        x = 0;
+        y = 0;
         cout<<"X = "<<x<<", Y = "<<y<<endl;
-    }*/
+    }
+
+    ~Entity()
+    {
+        cout<<"Destructor Called !!"<<endl;
+    }
+
+    /*
+        To delete constructor or destructor,
+        Entity() = delete;
+
+    */
+        Entity(int) = delete; // Delete Parameterized constructor
+
+
 };
 
 
