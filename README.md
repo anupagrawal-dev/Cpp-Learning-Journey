@@ -3,7 +3,7 @@
 This repository contains my structured C++ learning journey inspired by Cherno’s YouTube tutorials. 
 Each topic has a dedicated folder, following a structured format with `src/`, `header/`, and `CMakeLists.txt` files.
 
-Additionally, each folder includes a **Learnings.md** file that documents key concepts and explanations related to the topic and its code.
+Additionally, each folder includes a `Learnings.md` file that documents key concepts and explanations related to the topic and its code.
 
 ---
 
@@ -70,18 +70,29 @@ mkdir build && cd build
 cmake ..
 make
 ```
+
 For example:
 ```sh
 cd 1_Basics/class_basics
 mkdir build && cd build
 cmake ..
 make
-./Main # Replace with the actual executable name
-
-Or
-
-./bin/Main # At initial i have created binary file directly where we do compilation. Later on started putting Executable files inside bin folder.Replace Main with the actual executable name.
 ```
+
+### **Running the Executable:**
+
+Depending on the folder, the executable file (`Main`) may be located in different places:
+
+- **Directly inside the `build/` directory:**
+  ```sh
+  ./Main
+  ```
+- **Inside the `bin/` directory:**
+  ```sh
+  ./bin/Main
+  ```
+
+Check the folder structure to determine the correct path for execution.
 
 ---
 
