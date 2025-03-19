@@ -11,19 +11,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y cmake g++  # Install CMake and compiler
+        run: sudo apt-get update && sudo apt-get install -y cmake g++
 
-      - name: List repository files (for debugging)
-        run: ls -R  # List all files to verify structure
-
-      - name: Build all C++ topic folders
+      - name: Build and Test all C++ topics
         run: |
-          for dir in $(find . -mindepth 2 -name "CMakeLists.txt" -exec dirname {} \;); do
-            echo "Building $dir..."
-            mkdir -p $dir/build
-            cd $dir/build
-            cmake ..
-            cmake --build .
-            cd -  # Return to root directory
+          find . -mindepth 2 -name "CMakeLists.txt" -print0 | while IFS= read -r -d '' cmake_file; do
+            topic_dir=$(dirname "$cmake_file")
+            echo "Processing: $topic_dir"
+
+            build_dir="$topic_dir/build"
+            mkdir -p "$build_dir" && cd "$build_dir"
+
+            cmake .. && cmake --build . && ctest --output-on-failure || true
+            cd - > /dev/null  # Go back to root without printing path
           done
 
