@@ -1,3 +1,5 @@
+enable_testing()  # This enables the testing framework
+
 CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
 
 PROJECT(Main)
@@ -24,3 +26,5 @@ set_target_properties(Main PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${BIN_DIR}")
 target_include_directories(Main PRIVATE "${HEADER_DIR}")
 
 target_link_libraries(Main Calculator)
+
+add_test(NAME MainTest COMMAND "${BIN_DIR}/Main")  # Define a test
