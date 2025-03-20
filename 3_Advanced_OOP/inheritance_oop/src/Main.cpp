@@ -1,24 +1,26 @@
 #include "Main.h"
 
 class Entity {
-    public:
-        int x;
-        int y;
+public:
+
+    int x;
+    int y;
 
     void Move(int xa, int ya)
     {
+        cout<<"Move function from base Class Called and updated x and y value!!"<<endl;
         x += xa;
         y += ya;
     }
 };
 
 class Player : public Entity {
-    public:
-        string abc;
+public:
+    string abc;
 
     void print(string data)
     {
-        cout<<abc<<"x = "<<x<<", y = "<<y<<endl;
+        cout<<data<<"x = "<<x<<", y = "<<y<<endl;
     }
 };
 
