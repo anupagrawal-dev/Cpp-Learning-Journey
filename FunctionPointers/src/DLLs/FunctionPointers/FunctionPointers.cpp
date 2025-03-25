@@ -1,9 +1,16 @@
 #include "FunctionPointers.h"
+#include <vector>
 
 void HelloWorld()
 {
     cout<<"void returnType Function"<<endl;
 }
+
+/*
+void funcWithParams(int a)
+{
+    cout<<"void returnType Function"<<endl;
+}*/
 
 int addition(int a, int b)
 {
@@ -12,6 +19,23 @@ int addition(int a, int b)
     return a+b;
 }
 
+/*void callback_function(string test, int (*func)(int, int))
+{
+
+}*/
+
+void PrintValue(int value)
+{
+    cout<< "Value :: "<<value<<endl;
+}
+
+void callback_function(const vector<int>& Values, void (*func)(int))
+{
+    for( int value: Values)
+    {
+        func(value);
+    }
+}
 
 void FunctionPointers()
 {
@@ -22,6 +46,41 @@ void FunctionPointers()
         void (*func)() = HelloWorld;
 
         func(); //Fun
+
+        // We can also create alias for each type of function pointer. E.g. for this case creating alias for void func pointer with no parameters.
+        cout<<endl;
+
+        typedef void (*VoidFuncPtr)();
+
+        VoidFuncPtr newPtr = HelloWorld;
+
+        newPtr();
+
+        //newPtr = funcWithParams; 
+
+    }
+
+    // Create int Function Pointer to point int returnType function with parameters
+    {
+        cout<<endl;
+
+        int (*func)(int,int) = addition;
+
+        int result = func(4,5);
+
+        cout<<endl;
+
+        cout<<"addition of 4 and 5 is :: "<<result<<endl;
+    }
+
+    // Callback Mechanism : means call function as parameter of another function
+    {
+//        callback_func(string test, addition);
+        vector<int> values = { 1, 2, 4, 2, 3};
+
+        callback_function(values, PrintValue);
+          
+
     }
 
 
