@@ -37,6 +37,21 @@ void callback_function(const vector<int>& Values, void (*func)(int))
     }
 }
 
+int Add(int a, int b)
+{
+    return a+b;
+}
+
+int Subtract(int a, int b)
+{
+    return a-b;
+}
+
+int Multiply(int a, int b)
+{
+    return a*b;
+}
+
 void FunctionPointers()
 {
 	cout<<"FunctionPointers [START]"<<endl;
@@ -80,6 +95,17 @@ void FunctionPointers()
 
         callback_function(values, PrintValue);
           
+
+    }
+
+    // Function Tables
+    {
+        int (*Func)(int, int)[] = {Add, Subtract, Multiply};
+
+        Func[0](1,2);
+        Func[1](1,2);
+        Func[2](1,2);
+
 
     }
 

@@ -52,3 +52,10 @@ int main()
 ```
 
 Here, PrintValue is `callback` function, `func` is void function pointer with int parameter pointing to PrintValue function.
+
+
+1. **Fuction Tables** :-
+
+Function tables allow dynamic selection of functions at runtime.
+
+
