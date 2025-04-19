@@ -100,13 +100,11 @@ void FunctionPointers()
 
     // Function Tables
     {
-        int (*Func)(int, int)[] = {Add, Subtract, Multiply};
+        int (*Func[])(int, int) = {Add, Subtract, Multiply};
 
-        Func[0](1,2);
-        Func[1](1,2);
-        Func[2](1,2);
-
-
+        cout<<"Addition of 1 and 2 is :: "<<Func[0](1,2)<<endl;
+        cout<<"Subtraction of 1 and 2 is :: "<<Func[1](1,2)<<endl;
+        cout<<"Multiplication of 1 and 2 is :: "<<Func[2](1,2)<<endl;
     }
 
 

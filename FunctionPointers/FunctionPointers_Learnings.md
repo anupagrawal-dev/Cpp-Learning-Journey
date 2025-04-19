@@ -58,4 +58,34 @@ Here, PrintValue is `callback` function, `func` is void function pointer with in
 
 Function tables allow dynamic selection of functions at runtime.
 
+And we can call those functions as index of function pointer.
 
+E.g.
+```
+
+int Add(int a, int b)
+{
+    return a+b;
+}
+
+int Subtract(int a, int b)
+{
+    return a-b;
+}
+
+int Multiply(int a, int b)
+{
+    return a*b;
+}
+
+int main()
+{
+        int (*Func[])(int, int) = {Add, Subtract, Multiply};
+
+        Func[0](1,2);
+        Func[1](1,2);
+        Func[2](1,2);
+}
+
+```
+Now, here i have array of Function pointers "Func" which is pointed to multiple functions but with same return type and same number of paramters. Only logic and values can be different.
