@@ -1,0 +1,76 @@
+
+
+to check current config,
+
+git config --list
+
+To check current config details,
+
+To add username and mailId in config 
+
+git config user.name "<username>"
+git config user.mail "<mailid>"
+
+e.g.
+git config user.name "anupagrawal-dev"
+git config user.mail "anupa22784@gmail.com"
+
+to create global config for your linux user,
+
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+
+
+To switch to specific branch,
+
+git checkout <branch_name>
+
+To ensure your branch is up-to-date,
+
+git pull origin <branch_name>
+
+To create new branch,
+
+git checkout -b <branch_name>
+
+git checkout main                # Switch to main branch
+git pull origin main             # Ensure main is up-to-date
+git checkout -b feature-xyz      # Create and switch to new feature branch
+# Make changes
+git add .                        # Stage changes
+git commit -m "Commit message"   # Commit changes
+git push origin feature-xyz      # Push new branch to remote
+# Later, merge it back
+git checkout main                # Switch to main
+git pull origin main             # Ensure main is up-to-date
+git merge feature-xyz            # Merge feature branch into main
+git push origin main             # Push merged changes
+# Optional: Delete feature branch
+git branch -d feature-xyz        # Delete locally
+git push origin --delete feature-xyz  # Delete remotely
+
+
+To generate new ssh key,
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+
+start ssh agent
+eval "$(ssh-agent -s)"
+
+Add your ssh-key to agent
+ssh-add ~/.ssh/id_rsa
+
+ssh -T git@github.com
+
+git remote set-url origin git@github.com:username/repository.git
+
+git remote set-url origin git@github.com:anupagrawal-dev/Cpp_Learning_Journey.git
+
+To list all local branches,
+
+git branch
+
+to list all remote branches.
+
+git branch -r
+
+

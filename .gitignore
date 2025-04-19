@@ -1,11 +1,1 @@
 build/
-CMakeCache.txt
-CMakeFiles/
-*.o
-*.so
-*.a
-cmake_install.cmake
-CMakeCache.txt
-CMakeFiles/
-build/
-Makefile
