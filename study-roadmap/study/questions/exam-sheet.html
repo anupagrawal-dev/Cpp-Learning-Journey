@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Exam Sheet — C++/Linux/Systems</title><style>
+:root{--bg:#0e1118;--card:#171c26;--card2:#1e2431;--ink:#e8ecf5;--muted:#9aa4b8;--line:#28303f;
+--accent:#6ea8ff;--accent2:#54e0c0;--amber:#ffcf6b;--pink:#ff8aa0;--code:#0a0d15;}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#0c0f16,#11151f);color:var(--ink);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.65;font-size:16px}
+.wrap{max-width:860px;margin:0 auto;padding:34px 20px 90px}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-bottom:22px}
+.cat{display:inline-block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--accent2);
+background:rgba(84,224,192,.1);border:1px solid rgba(84,224,192,.25);padding:4px 10px;border-radius:20px}
+.numbadge{font-family:"SFMono-Regular",Consolas,monospace;color:var(--muted);font-weight:700}
+h1{font-size:30px;line-height:1.15;margin:6px 0 8px;font-weight:800}
+.summary{color:var(--muted);font-size:17px;margin:0 0 26px}
+h2{font-size:19px;margin:30px 0 10px;font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin:16px 0;box-shadow:0 10px 26px rgba(0,0,0,.25)}
+.keypoints{border-left:4px solid var(--accent2);background:rgba(84,224,192,.07)} .keypoints h2{margin-top:0;color:var(--accent2)}
+.confuse{border-left:4px solid var(--amber);background:rgba(255,207,107,.07)} .confuse h2{margin-top:0;color:var(--amber)}
+.testcta{border-left:4px solid var(--accent);background:rgba(110,168,255,.08)}
+.pair{margin:12px 0;padding:12px 14px;background:var(--card2);border:1px solid var(--line);border-radius:10px}
+.pair .vs{font-family:monospace;font-weight:700;color:var(--amber);font-size:14.5px;margin-bottom:5px}
+.pair .d{color:#dce2f0;font-size:14.5px}
+p{margin:11px 0;color:#dce2f0} ul{margin:10px 0;padding-left:22px} li{margin:6px 0}
+code{background:var(--card2);border:1px solid var(--line);padding:1px 6px;border-radius:5px;font-family:"SFMono-Regular",Consolas,monospace;font-size:13.5px;color:var(--accent2)}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto;
+font-family:"SFMono-Regular",Consolas,monospace;font-size:13px;color:#cdd6f4;line-height:1.5}
+pre code{background:none;border:none;padding:0;color:inherit}
+.nav{display:flex;justify-content:space-between;margin-top:34px;gap:10px}
+.nav a{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14px;flex:1}
+.nav a.next{text-align:right}
+footer{margin-top:40px;color:var(--muted);font-size:12.5px;text-align:center}
+.grp{margin:26px 0}
+.grp h2{color:var(--accent);border-bottom:1px solid var(--line);padding-bottom:6px;display:flex;justify-content:space-between}
+.tlist{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+.tlink{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 14px;display:flex;gap:12px;align-items:baseline}
+.tlink:hover{border-color:var(--accent);text-decoration:none}
+.tlink .n{font-family:monospace;font-weight:700;color:var(--accent2);flex:none}
+.tlink .n2{font-weight:700;color:var(--ink)} .tlink .s{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.bigbtn{display:inline-block;background:rgba(110,168,255,.12);border:1px solid rgba(110,168,255,.4);color:var(--accent);
+padding:12px 18px;border-radius:12px;font-weight:700;margin:6px 0}
+.qcat{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);font-weight:800;margin:34px 0 4px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.qtopic{font-weight:700;color:var(--ink);margin:22px 0 8px;font-size:16px}
+.qtopic .n{font-family:monospace;color:var(--accent2)}
+.count{color:var(--muted);font-size:13px;font-weight:400}
+.qcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 18px;margin:12px 0}
+.qq{font-weight:600;color:var(--ink);font-size:15.5px}
+.qnum{font-family:"SFMono-Regular",Consolas,monospace;color:var(--accent2);font-weight:700}
+.qnote{margin-top:9px;color:var(--muted);font-size:14px}
+.qnote pre{margin:8px 0}
+details.ansbox{margin-top:12px;border:none;background:none;padding:0}
+details.ansbox>summary{display:inline-block;cursor:pointer;list-style:none;background:rgba(110,168,255,.14);
+border:1px solid rgba(110,168,255,.42);color:var(--accent);padding:7px 15px;border-radius:9px;font-weight:700;font-size:13.5px}
+details.ansbox>summary::-webkit-details-marker{display:none}
+details.ansbox>summary::marker{content:""}
+details.ansbox>summary:hover{background:rgba(110,168,255,.22)}
+details.ansbox[open]>summary{margin-bottom:10px;background:rgba(84,224,192,.16);border-color:rgba(84,224,192,.42);color:var(--accent2)}
+.ans{background:var(--card2);border:1px solid var(--line);border-left:4px solid var(--accent2);border-radius:10px;padding:12px 16px;color:#dce2f0;font-size:14.5px}
+.ans p:first-child{margin-top:0} .ans p:last-child{margin-bottom:0}
+.expbox{margin-top:8px;border:none;background:none;padding:0}
+.expbox>summary{display:inline-block;cursor:pointer;list-style:none;color:var(--muted);font-size:12.5px;border-bottom:1px dotted var(--muted)}
+.expbox>summary::-webkit-details-marker{display:none}
+.expbox>summary::marker{content:""}
+.exp{margin-top:8px;color:var(--muted);font-size:13.5px;background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.exambar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:rgba(14,17,24,.92);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:14px 0 22px}
+.progpill{font-weight:700;color:var(--accent2);background:rgba(84,224,192,.1);border:1px solid rgba(84,224,192,.3);padding:6px 12px;border-radius:20px;font-size:13.5px}
+.xbtn{cursor:pointer;background:var(--accent);color:#08111f;border:none;border-radius:9px;padding:9px 14px;font-weight:700;font-size:13.5px;display:inline-block}
+.xbtn.ghost{background:var(--card2);color:var(--ink);border:1px solid var(--line)}
+.ansinput{width:100%;margin-top:10px;background:#0b0e16;border:1px solid var(--line);border-radius:9px;color:var(--ink);padding:10px 12px;font-family:inherit;font-size:14px;resize:vertical}
+.ansinput:focus{outline:none;border-color:var(--accent)}
+</style></head><body><div class="wrap"><div class="top"><a href="../index.html">&larr; Back to roadmap</a><span class="cat">Exam mode</span></div>
+<h1>Exam Sheet — type your answers</h1>
+<p class="summary">Answer each question in your own words in the box. Your answers <b>auto-save in this browser</b>. When you want feedback, press <b>Download my answers</b> and share that file with your coach to be graded. You can reveal the model answer any time to self-check.</p>
+<div class="exambar"><span id="prog" class="progpill">Answered 0 / 133</span><button id="btn-download" class="xbtn">⬇ Download my answers</button><label class="xbtn ghost">📂 Load answers file<input id="file-import" type="file" accept=".md,.txt" hidden></label><button id="btn-clear" class="xbtn ghost">🗑 Clear</button></div>
+<div class="qcat">C++ Core</div>
+<div class="qtopic"><span class="n">01</span> Control Flow</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q1.</span> What does this code print?</div>
+<div class="qnote"><pre>int x = 1;
+switch (x) {
+  case 1: cout &lt;&lt; "A";
+  case 2: cout &lt;&lt; "B"; break;
+  case 3: cout &lt;&lt; "C";
+}</pre></div>
+<textarea class="ansinput" data-qid="1" data-topic="01 Control Flow" data-q="What does this code print?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>It prints <strong>AB</strong>. <code>x</code> is 1, so control enters <code>case 1</code> and prints <code>A</code>. There is <strong>no <code>break</code></strong> after <code>case 1</code>, so execution *falls through* into <code>case 2</code>, prints <code>B</code>, and only then hits <code>break</code>. <code>case 3</code> never runs. To print only <code>A</code>, add a <code>break</code> after <code>case 1</code>.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q2.</span> When should you use a <code>do-while</code> loop instead of a <code>while</code> loop?</div>
+<textarea class="ansinput" data-qid="2" data-topic="01 Control Flow" data-q="When should you use a `do-while` loop instead of a `while` loop?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Use a <code>do-while</code> when the body must run <strong>at least once</strong> before the condition is checked — because a <code>do-while</code> evaluates its condition *after* running the body, whereas a <code>while</code> checks *first* and may run zero times.</p>
+<pre>do {
+    x = readInput();
+} while (!valid(x));   // ask once, then keep asking until valid</pre></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q3.</span> Does this compile, and what is the value of <code>x</code> after the <code>if</code>?</div>
+<div class="qnote"><pre>int x = 0;
+if (x = 5) {
+    cout &lt;&lt; "entered";
+}
+// what prints? what is x now?</pre></div>
+<textarea class="ansinput" data-qid="3" data-topic="01 Control Flow" data-q="Does this compile, and what is the value of `x` after the `if`?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>It <strong>compiles and runs fine</strong> — this is *not* a compiler error, and calling it a 'bug' would be wrong: it's valid C++. <code>=</code> is <strong>assignment</strong>, not comparison, so <code>x = 5</code> stores 5 in <code>x</code>, and the value of that expression is 5, which is truthy — the <code>if</code> body always runs and <code>x</code> is <strong>5</strong> afterward. It's usually a <strong>typo for <code>==</code></strong> (comparison), so it's a logic pitfall rather than something the compiler rejects. Many compilers warn about it, and writing <code>if (5 == x)</code> would turn the typo into a real compile error.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q4.</span> When is <code>switch</code> fall-through intentional rather than a mistake?</div>
+<textarea class="ansinput" data-qid="4" data-topic="01 Control Flow" data-q="When is `switch` fall-through intentional rather than a mistake?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>When several cases should share the same code — you deliberately leave out <code>break</code> so one case flows into the next:</p>
+<pre>switch (grade) {
+  case 'A':
+  case 'B': cout &lt;&lt; "Pass"; break;   // A and B both -&gt; Pass
+  case 'F': cout &lt;&lt; "Fail"; break;
+}</pre></div></details></div>
+<div class="qtopic"><span class="n">02</span> Pointers</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q5.</span> What is the difference between <code>*p</code> and <code>&amp;x</code>?</div>
+<textarea class="ansinput" data-qid="5" data-topic="02 Pointers" data-q="What is the difference between `*p` and `&amp;x`?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><code>&amp;x</code> means <strong>'address of x'</strong> — it produces the memory address where <code>x</code> lives. <code>*p</code> means <strong>'dereference p'</strong> — go to the address stored in <code>p</code> and read/write the value there. They are inverses: <code>*(&amp;x)</code> is just <code>x</code>.</p>
+<pre>int x = 42;
+int* p = &amp;x;   // p holds x's address
+int y = *p;    // y = 42 (value at that address)
+*p = 99;       // x is now 99</pre></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q6.</span> For a heap pointer <code>p</code>, what does printing <code>p</code> give you versus printing <code>&amp;p</code>?</div>
+<div class="qnote"><pre>int* p = new int(5);
+cout &lt;&lt; p;    // the heap address
+cout &lt;&lt; &amp;p;   // where p itself lives (stack)</pre></div>
+<textarea class="ansinput" data-qid="6" data-topic="02 Pointers" data-q="For a heap pointer `p`, what does printing `p` give you versus printing `&amp;p`?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><code>p</code> is the value stored *in* the pointer — the <strong>address it points to</strong> (here, the heap block from <code>new</code>). <code>&amp;p</code> is the address of the <strong>pointer variable itself</strong>, which sits on the stack. They are two different addresses. To inspect the heap allocation you print <code>p</code>; <code>&amp;p</code> only tells you where the pointer lives.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q7.</span> What is the difference between a null pointer and a dangling pointer?</div>
+<textarea class="ansinput" data-qid="7" data-topic="02 Pointers" data-q="What is the difference between a null pointer and a dangling pointer?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>A <strong>null</strong> pointer holds the address 0 — it deliberately points to nothing, and you can safely test for it (<code>if (p) ...</code>). A <strong>dangling</strong> pointer holds an address that *used to* be valid but whose memory has been freed or gone out of scope; it still looks like a normal non-zero address, so you <strong>cannot</strong> detect it by checking — using it is undefined behaviour.</p>
+<pre>int* p = nullptr;   // null: safe to check
+int* q = new int(3);
+delete q;           // q now dangles (still non-null!)</pre></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q8.</span> Can a pointer be changed to point somewhere else after it is created?</div>
+<textarea class="ansinput" data-qid="8" data-topic="02 Pointers" data-q="Can a pointer be changed to point somewhere else after it is created?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Yes. Unlike a reference, a pointer can be <strong>reseated</strong> any number of times, and can be set to <code>nullptr</code>.</p>
+<pre>int a=1, b=2;
+int* p = &amp;a;   // points to a
+p = &amp;b;        // now points to b
+p = nullptr;   // now points to nothing</pre></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q9.</span> Where does a pointer variable itself live in memory?</div>
+<textarea class="ansinput" data-qid="9" data-topic="02 Pointers" data-q="Where does a pointer variable itself live in memory?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>The pointer <strong>variable</strong> — the 8 bytes holding the address on a 64-bit machine — lives wherever it's declared, typically on the <strong>stack</strong> as a local. That is separate from what it *points to*, which can live anywhere: the stack (<code>int* p = &amp;local;</code>), the heap (<code>int* p = new int;</code>), or static storage.</p></div></details></div>
+<div class="qtopic"><span class="n">03</span> Stack &amp; Heap Memory</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q10.</span> Why is stack allocation faster than heap allocation?</div>
+<textarea class="ansinput" data-qid="10" data-topic="03 Stack &amp; Heap Memory" data-q="Why is stack allocation faster than heap allocation?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Stack memory is <strong>already committed</strong> to the process, so allocating a local is just moving the stack-pointer register down by the needed bytes; freeing is moving it back when the function returns — no searching, no bookkeeping. Heap allocation (<code>new</code>) must ask the allocator to <strong>search a free list</strong> for a suitable block, mark it used, and return it (and you must <code>delete</code> it later). That search + metadata make it slower.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q11.</span> Which direction does the stack grow, and where is its 'top'?</div>
+<textarea class="ansinput" data-qid="11" data-topic="03 Stack &amp; Heap Memory" data-q="Which direction does the stack grow, and where is its &#x27;top&#x27;?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>On typical machines the stack grows <strong>downward</strong>, toward <strong>lower</strong> addresses — each call/<code>push</code> *decrements* the stack pointer. So the 'top of stack' (the most recent item) is actually at the <strong>lowest</strong> address currently in use, the opposite of the everyday picture of a stack growing up.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q12.</span> What happens when the caller dereferences the pointer this function returns?</div>
+<div class="qnote"><pre>int* bad() {
+    int x = 42;
+    return &amp;x;   // returning the address of a local
+}</pre></div>
+<textarea class="ansinput" data-qid="12" data-topic="03 Stack &amp; Heap Memory" data-q="What happens when the caller dereferences the pointer this function returns?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>It's a <strong>dangling pointer</strong>, so dereferencing it is <strong>undefined behaviour</strong>. <code>x</code> is a local — it lives on <code>bad()</code>'s stack frame; when <code>bad()</code> returns, that frame is reclaimed and <code>x</code> no longer exists, yet the returned pointer still holds its old address. Reading through it may give garbage, may seem to work, or may crash. To return something that outlives the call, allocate on the heap (<code>new</code>) or return by value.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q13.</span> What happens if you free <code>new[]</code> memory with plain <code>delete</code> (instead of <code>delete[]</code>)?</div>
+<textarea class="ansinput" data-qid="13" data-topic="03 Stack &amp; Heap Memory" data-q="What happens if you free `new[]` memory with plain `delete` (instead of `delete[]`)?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong>Undefined behaviour.</strong> Array <code>new[]</code> and scalar <code>new</code> can use different bookkeeping, so they must be matched exactly: <code>new</code> ↔ <code>delete</code>, and <code>new[]</code> ↔ <code>delete[]</code>. Mismatching them can corrupt the heap or leak — even if it *seems* to work on one compiler.</p>
+<pre>int* a = new int[10];
+delete a;     // WRONG — must be delete[] a;</pre></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q14.</span> Why does very deep recursion crash a program?</div>
+<textarea class="ansinput" data-qid="14" data-topic="03 Stack &amp; Heap Memory" data-q="Why does very deep recursion crash a program?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Each function call pushes a <strong>stack frame</strong> (return address, saved registers, locals). The stack is small — typically only <strong>1–8 MB</strong>. Deep or unbounded recursion keeps pushing frames until the stack is exhausted → <strong>stack overflow</strong> (a crash). This is one reason large data lives on the heap instead.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q15.</span> Why do the heap addresses a program prints change on every run?</div>
+<textarea class="ansinput" data-qid="15" data-topic="03 Stack &amp; Heap Memory" data-q="Why do the heap addresses a program prints change on every run?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Because of <strong>ASLR</strong> (Address Space Layout Randomization): the OS deliberately randomizes where memory regions are placed each run, so attackers can't predict addresses. The structure is the same but the absolute base shifts, so <code>new int</code> prints a different address each time.</p></div></details></div>
+<div class="qtopic"><span class="n">04</span> References</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q16.</span> Name two things a reference cannot do that a pointer can.</div>
+<textarea class="ansinput" data-qid="16" data-topic="04 References" data-q="Name two things a reference cannot do that a pointer can." rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>A reference <strong>cannot be null</strong> and <strong>cannot be reseated</strong> (rebound to a different variable after initialization). It also has <strong>no arithmetic</strong> and must be initialized when declared. A pointer can be null, can point at different things over time, and supports pointer arithmetic.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q17.</span> What does this print, and why?</div>
+<div class="qnote"><pre>void byVal(int x){ x = 99; }
+void byRef(int&amp; x){ x = 99; }
+int n = 1;
+byVal(n); byRef(n);
+cout &lt;&lt; n;</pre></div>
+<textarea class="ansinput" data-qid="17" data-topic="04 References" data-q="What does this print, and why?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>It prints <strong>99</strong>. <code>byVal</code> gets a <strong>copy</strong>, so its <code>x = 99</code> changes only the local copy — <code>n</code> is untouched by it. <code>byRef</code> gets a <strong>reference (alias)</strong> to <code>n</code>, so its <code>x = 99</code> writes straight through to <code>n</code>. After both calls, <code>n</code> is 99.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q18.</span> Why do we often pass large objects as <code>const T&amp;</code> instead of by value?</div>
+<textarea class="ansinput" data-qid="18" data-topic="04 References" data-q="Why do we often pass large objects as `const T&amp;` instead of by value?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Passing by value (<code>T</code>) <strong>copies</strong> the whole object, which is expensive for a big <code>std::string</code> or <code>std::vector</code>. A <code>const T&amp;</code> binds an <strong>alias</strong> — no copy — while <code>const</code> guarantees the function won't modify the caller's object. So you get a reference's speed with read-only safety.</p>
+<pre>void print(const std::string&amp; s);  // no copy, cannot change s</pre></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q19.</span> Why must a reference be initialized at the point where it is declared?</div>
+<textarea class="ansinput" data-qid="19" data-topic="04 References" data-q="Why must a reference be initialized at the point where it is declared?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Because a reference is a permanent <strong>alias</strong> with no identity of its own — it must be bound to an existing object the moment it's created, and can never be re-bound afterward. <code>int&amp; r;</code> is a compile error; <code>int&amp; r = x;</code> is required. (That's exactly why a reference makes a good fixed alias but a poor 'optional' or reseatable handle — use a pointer for those.)</p></div></details></div>
+<div class="qtopic"><span class="n">05</span> Classes &amp; Encapsulation</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q20.</span> If <code>private</code> gives no runtime security, what is the real point of making data private?</div>
+<textarea class="ansinput" data-qid="20" data-topic="05 Classes &amp; Encapsulation" data-q="If `private` gives no runtime security, what is the real point of making data private?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Two real benefits: (1) <strong>Invariant safety</strong> — every change must go through a public method that can *validate* it, so the object can never be put into an illegal state. (2) <strong>Freedom to change internals</strong> — since outside code can't touch the fields directly, you can later change how the data is stored without breaking any user of the class. <code>private</code> is a *design/compile-time* tool for controlled change, not a runtime guard against attackers.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q21.</span> What is a class invariant?</div>
+<textarea class="ansinput" data-qid="21" data-topic="05 Classes &amp; Encapsulation" data-q="What is a class invariant?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>An <strong>invariant</strong> is a rule that must always be true for a valid object — e.g. a <code>BankAccount</code>'s balance must never be negative. By keeping <code>balance</code> private and only changing it through <code>deposit()</code>/<code>withdraw()</code>, each of which checks the rule, the invariant is guaranteed after every operation, so the object is never left inconsistent.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q22.</span> Show how a method can protect an invariant that a public field could not.</div>
+<textarea class="ansinput" data-qid="22" data-topic="05 Classes &amp; Encapsulation" data-q="Show how a method can protect an invariant that a public field could not." rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>A method can validate *before* writing; a public field can be set to anything:</p>
+<pre>class Account {
+    double balance = 0;
+public:
+    bool withdraw(double amt){
+        if (amt &lt; 0 || amt &gt; balance) return false; // guard
+        balance -= amt; return true;
+    }
+};</pre>
+<p>If <code>balance</code> were public, any code could do <code>a.balance = -500;</code> and break the invariant. The method is the single validated gate.</p></div></details></div>
+<div class="qtopic"><span class="n">06</span> Classes vs Structs</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q23.</span> What are the ONLY two language-level differences between a <code>class</code> and a <code>struct</code>?</div>
+<textarea class="ansinput" data-qid="23" data-topic="06 Classes vs Structs" data-q="What are the ONLY two language-level differences between a `class` and a `struct`?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>(1) <strong>Default member access</strong>: <code>class</code> members are <code>private</code> by default, <code>struct</code> members are <code>public</code> by default. (2) <strong>Default inheritance mode</strong>: <code>class B : A</code> is private inheritance by default, <code>struct B : A</code> is public by default. Everything else — constructors, methods, virtual functions, templates, inheritance — is identical.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q24.</span> Is <code>x</code> accessible from outside here?</div>
+<div class="qnote"><pre>class C { int x; };
+int main(){ C c; c.x = 5; }</pre></div>
+<textarea class="ansinput" data-qid="24" data-topic="06 Classes vs Structs" data-q="Is `x` accessible from outside here?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong>No.</strong> In a <code>class</code>, members are <code>private</code> by default, and <code>x</code> has no access specifier, so it's private — <code>c.x = 5;</code> from outside is a compile error. Change <code>class</code> to <code>struct</code> and <code>x</code> becomes public, so it would compile. That default is the whole practical difference.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q25.</span> By convention, when do you use a <code>struct</code> rather than a <code>class</code>?</div>
+<textarea class="ansinput" data-qid="25" data-topic="06 Classes vs Structs" data-q="By convention, when do you use a `struct` rather than a `class`?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Use a <strong><code>struct</code></strong> for a passive bundle of public data with little or no behaviour (a plain-old-data aggregate, e.g. <code>struct Point{int x,y;};</code>). Use a <strong><code>class</code></strong> for an encapsulated type that maintains invariants and exposes behaviour through methods while hiding its data. The compiler treats them the same — this is purely a readability convention.</p></div></details></div>
+<div class="qtopic"><span class="n">07</span> How to Write a Class</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q26.</span> Why does this compile but fail to link with 'undefined reference to Entity::GetX()'?</div>
+<div class="qnote"><pre>// entity.h
+class Entity { int x; public: int GetX(); };
+// entity.cpp
+int GetX() { return x; }   // note: no Entity::</pre></div>
+<textarea class="ansinput" data-qid="26" data-topic="07 How to Write a Class" data-q="Why does this compile but fail to link with &#x27;undefined reference to Entity::GetX()&#x27;?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>The out-of-class definition is missing the <code>Entity::</code> qualifier, so <code>int GetX(){...}</code> defines an <strong>unrelated free function</strong> named <code>GetX</code>, not the member. The class's declared <code>GetX()</code> therefore has <strong>no definition</strong>, and the linker complains. Fix: <code>int Entity::GetX() { return x; }</code>.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q27.</span> When should a member function be marked <code>const</code>?</div>
+<textarea class="ansinput" data-qid="27" data-topic="07 How to Write a Class" data-q="When should a member function be marked `const`?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Mark a method <code>const</code> whenever it <strong>doesn't modify the object's state</strong> — typically getters: <code>int GetX() const;</code>. The payoff: it can then be called on <code>const</code> objects and <code>const</code> references, and the compiler enforces the read-only promise (modifying a member inside a <code>const</code> method is an error unless the member is <code>mutable</code>). Missing <code>const</code> on getters is something interviewers notice.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q28.</span> What happens if you put a non-inline function's full body in a header that multiple .cpp files include?</div>
+<textarea class="ansinput" data-qid="28" data-topic="07 How to Write a Class" data-q="What happens if you put a non-inline function&#x27;s full body in a header that multiple .cpp files include?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>You get a <strong>duplicate-symbol link error</strong>, because of the <strong>One Definition Rule (ODR)</strong>: a non-inline function may be *defined* only once in the whole program. A header is textually pasted into every <code>.cpp</code> that <code>#include</code>s it, so a full body in the header becomes a definition in *each* including <code>.cpp</code> → multiple definitions. Fix: put the <strong>declaration</strong> in the header and the single <strong>definition</strong> in one <code>.cpp</code> (or mark it <code>inline</code>).</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q29.</span> What is the difference between a declaration and a definition?</div>
+<textarea class="ansinput" data-qid="29" data-topic="07 How to Write a Class" data-q="What is the difference between a declaration and a definition?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>A <strong>declaration</strong> tells the compiler something *exists* and its type/signature (<code>int GetX();</code>) — it can appear many times. A <strong>definition</strong> actually provides the body or storage (<code>int Entity::GetX(){return x;}</code>) — it must appear exactly once (ODR). Declarations live in headers; the single definition lives in a source file.</p></div></details></div>
+<div class="qtopic"><span class="n">08</span> Static (outside classes)</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q30.</span> What does calling <code>counter()</code> three times in a row print?</div>
+<div class="qnote"><pre>int counter(){ static int n = 0; return ++n; }</pre></div>
+<textarea class="ansinput" data-qid="30" data-topic="08 Static (outside classes)" data-q="What does calling `counter()` three times in a row print?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>It prints <strong>1 2 3</strong>. The <code>static</code> local <code>n</code> is initialized to 0 <strong>once</strong>, on the first call, then <strong>retains its value between calls</strong> (lifetime = the whole program, scope = the function). So each call increments the same <code>n</code>: 1, 2, 3. Without <code>static</code>, <code>n</code> would reset to 0 each call and print 1 1 1.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q31.</span> What does <code>static</code> do to a variable declared at file/global scope?</div>
+<textarea class="ansinput" data-qid="31" data-topic="08 Static (outside classes)" data-q="What does `static` do to a variable declared at file/global scope?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>It gives the variable <strong>internal linkage</strong> — the symbol is visible <strong>only within that translation unit</strong> (that <code>.cpp</code>). Other files can't see or link to it, and two files can each have their own <code>static int x;</code> with no clash. This is the opposite of <code>extern</code>, which shares one symbol across files.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q32.</span> Why does a <code>static</code> local variable initialize safely regardless of other globals' init order?</div>
+<details class="expbox"><summary>What is this question asking?</summary><div class="exp"><p>This refers to the 'static initialization order fiasco' — a named C++ problem where globals defined in different .cpp files are constructed in an unspecified order across files. The question asks why a function-local <code>static</code> is immune to that ordering problem.</p></div></details>
+<textarea class="ansinput" data-qid="32" data-topic="08 Static (outside classes)" data-q="Why does a `static` local variable initialize safely regardless of other globals&#x27; init order?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Because a <code>static</code> local initializes <strong>on first use</strong> — the first time control reaches its declaration — not at program startup. This dodges the *static initialization order fiasco*: globals in <strong>different</strong> translation units are initialized in an <strong>unspecified</strong> order, so one global's constructor using another (from a different <code>.cpp</code>) may run before that other is initialized (a bug). A static local's init order is instead defined by *call order*, which is deterministic. (Basis of the Meyers singleton.)</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q33.</span> What does <code>extern int x;</code> declare?</div>
+<textarea class="ansinput" data-qid="33" data-topic="08 Static (outside classes)" data-q="What does `extern int x;` declare?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>It's a <strong>declaration</strong> (not a definition) saying: 'an <code>int x</code> with external linkage is defined in some *other* translation unit — share that one.' It reserves no storage itself. If no <code>.cpp</code> actually *defines* <code>int x;</code> anywhere, the linker can't find the symbol and reports <strong>'undefined reference to x'</strong>.</p></div></details></div>
+<div class="qtopic"><span class="n">09</span> Static (for Classes &amp; Structs)</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q34.</span> Does a <code>static</code> data member increase each object's <code>sizeof</code>?</div>
+<textarea class="ansinput" data-qid="34" data-topic="09 Static (for Classes &amp; Structs)" data-q="Does a `static` data member increase each object&#x27;s `sizeof`?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>No. A <code>static</code> member is <strong>shared by all objects</strong> — there is exactly <strong>one</strong> copy in static storage, not one per object. So it doesn't live inside the object and doesn't count toward <code>sizeof(obj)</code>. (An ordinary non-static member does live in each object and adds to its size.) A classic use is a counter of how many instances exist.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q35.</span> Why does this fail to link with 'undefined reference to Entity::count'?</div>
+<div class="qnote"><pre>struct Entity { static int count; };
+// no definition anywhere
+int main(){ Entity::count++; }</pre></div>
+<textarea class="ansinput" data-qid="35" data-topic="09 Static (for Classes &amp; Structs)" data-q="Why does this fail to link with &#x27;undefined reference to Entity::count&#x27;?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>A <strong>non-inline static data member</strong> is only *declared* inside the class — it still needs exactly one <strong>definition</strong> outside it. Without that, the linker can't find storage for <code>Entity::count</code>. Fix (pre-C++17): add <code>int Entity::count = 0;</code> in one <code>.cpp</code>. Fix (C++17+): declare it <code>inline static int count = 0;</code> inside the class, which provides the definition automatically.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q36.</span> Why can't a <code>static</code> member function read a normal (non-static) data member?</div>
+<textarea class="ansinput" data-qid="36" data-topic="09 Static (for Classes &amp; Structs)" data-q="Why can&#x27;t a `static` member function read a normal (non-static) data member?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>A static member function has <strong>no <code>this</code> pointer</strong> — it isn't tied to any particular object, and you can call it as <code>Class::fn()</code> with no instance at all. Since per-object data lives *in an object* and there's no object in hand, there's nothing to read it from. A static function can only touch <strong>static</strong> members (or data passed in as arguments).</p></div></details></div>
+<div class="qtopic"><span class="n">10</span> Enums</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q37.</span> In <code>enum E { A = 3, B, C };</code>, what are the values of <code>B</code> and <code>C</code>?</div>
+<textarea class="ansinput" data-qid="37" data-topic="10 Enums" data-q="In `enum E { A = 3, B, C };`, what are the values of `B` and `C`?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><code>B == 4</code> and <code>C == 5</code>. Enumerators without an explicit value take the <strong>previous value + 1</strong>. <code>A</code> is set to 3, so <code>B</code> becomes 4 and <code>C</code> becomes 5. (If nothing were assigned at all, they would start at 0.)</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q38.</span> Give two problems with a plain <code>enum</code> that <code>enum class</code> fixes.</div>
+<textarea class="ansinput" data-qid="38" data-topic="10 Enums" data-q="Give two problems with a plain `enum` that `enum class` fixes." rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>(1) <strong>Name leakage</strong>: a plain <code>enum</code>'s names go into the enclosing scope, so <code>enum Color{Red}</code> and <code>enum Fruit{Red}</code> collide. <code>enum class Color{Red}</code> scopes it as <code>Color::Red</code>. (2) <strong>Implicit int conversion</strong>: a plain enum converts to <code>int</code> silently, so you can accidentally compare unrelated enums or do arithmetic on them; <code>enum class</code> blocks that (you must <code>static_cast&lt;int&gt;(x)</code> deliberately).</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q39.</span> How do you make an enum occupy only 1 byte instead of the default 4?</div>
+<textarea class="ansinput" data-qid="39" data-topic="10 Enums" data-q="How do you make an enum occupy only 1 byte instead of the default 4?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Give it an explicit <strong>underlying type</strong>:</p>
+<pre>enum class Color : uint8_t { Red, Green, Blue };</pre>
+<p>The <code>: uint8_t</code> fixes storage to 1 byte — useful when packing many enum values into structs or over the wire.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q40.</span> How do you convert an <code>enum class</code> value to an <code>int</code>?</div>
+<textarea class="ansinput" data-qid="40" data-topic="10 Enums" data-q="How do you convert an `enum class` value to an `int`?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>With an explicit cast: <code>int n = static_cast&lt;int&gt;(Color::Green);</code>. It's deliberately *not* automatic — <code>enum class</code> is type-safe and refuses implicit conversion to <code>int</code>, which prevents accidental mixing of unrelated enums and silent arithmetic bugs. You opt in with the cast only when you really mean it.</p></div></details></div>
+<div class="qtopic"><span class="n">11</span> Constructors</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q41.</span> Why does <code>Entity e;</code> stop compiling once you add a constructor that takes arguments?</div>
+<div class="qnote"><pre>class Entity {
+public:
+    Entity(int x) { /*...*/ }   // now Entity e; fails
+};</pre></div>
+<textarea class="ansinput" data-qid="41" data-topic="11 Constructors" data-q="Why does `Entity e;` stop compiling once you add a constructor that takes arguments?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>As soon as you <strong>declare any constructor of your own</strong>, the compiler stops providing the free <strong>default (no-argument) constructor</strong>. So <code>Entity e;</code> (which needs a no-arg ctor) no longer compiles. Fixes: add your own no-arg ctor, or explicitly request the compiler's with <code>Entity() = default;</code>.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q42.</span> Name two cases where a member initializer list is *required*, not merely preferred.</div>
+<textarea class="ansinput" data-qid="42" data-topic="11 Constructors" data-q="Name two cases where a member initializer list is *required*, not merely preferred." rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>The <code>: member(value), ...</code> list (which initializes members directly, before the body) is <strong>required</strong> for: (1) <strong><code>const</code> members</strong> — they must be initialized, never assigned; and (2) <strong>reference members</strong> — same reason (a reference must bind at creation). It's also required for member objects whose type has <strong>no default constructor</strong>.</p>
+<pre>class A { const int id; int&amp; ref;
+  A(int i, int&amp; r) : id(i), ref(r) {}  // must use init list
+};</pre></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q43.</span> Why prefer an initializer list over assigning members inside the constructor body?</div>
+<textarea class="ansinput" data-qid="43" data-topic="11 Constructors" data-q="Why prefer an initializer list over assigning members inside the constructor body?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>The init list <strong>constructs each member once, directly</strong> with the right value. Assigning in the body first <strong>default-constructs</strong> the member, then <strong>overwrites</strong> it — two steps, wasteful for non-trivial types, and outright illegal for <code>const</code>/reference members. So the init list is both faster and more capable.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q44.</span> What does <code>Entity e();</code> actually declare?</div>
+<textarea class="ansinput" data-qid="44" data-topic="11 Constructors" data-q="What does `Entity e();` actually declare?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>A <strong>function</strong> named <code>e</code> that takes no parameters and returns an <code>Entity</code> — *not* an object. This is the <strong>'most vexing parse'</strong>: the compiler prefers to read it as a declaration. To create an object, write <code>Entity e;</code> or <code>Entity e{};</code> (the brace form avoids the ambiguity).</p></div></details></div>
+<div class="qtopic"><span class="n">12</span> Destructors &amp; RAII</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q45.</span> <code>Base</code> has a non-virtual destructor — what happens when <code>delete b;</code> runs?</div>
+<div class="qnote"><pre>struct Base { ~Base(){} };            // non-virtual!
+struct Derived : Base { /* owns memory */ };
+Base* b = new Derived();
+delete b;</pre></div>
+<textarea class="ansinput" data-qid="45" data-topic="12 Destructors &amp; RAII" data-q="`Base` has a non-virtual destructor — what happens when `delete b;` runs?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Only <code>~Base()</code> runs. <code>delete b</code> goes through a <code>Base*</code> whose destructor is non-virtual, so it uses static dispatch and <code>~Derived()</code> is <strong>never called</strong> — anything <code>Derived</code> owns is leaked (the standard calls this undefined behaviour). To make it correct, declare the base destructor <strong><code>virtual</code></strong> (<code>virtual ~Base();</code>); then <code>delete b</code> runs <code>~Derived()</code> first, then <code>~Base()</code>.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q46.</span> Why does RAII make resource cleanup automatic and exception-safe?</div>
+<textarea class="ansinput" data-qid="46" data-topic="12 Destructors &amp; RAII" data-q="Why does RAII make resource cleanup automatic and exception-safe?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong>RAII</strong> (Resource Acquisition Is Initialization) ties a resource's lifetime to an object: acquire it in the <strong>constructor</strong>, release it in the <strong>destructor</strong>. A local object's destructor runs automatically when it leaves scope — <strong>including when an exception unwinds the stack</strong> — so the resource is always released, with no manual <code>free</code>/<code>close</code>/<code>unlock</code> to forget. <code>std::unique_ptr</code>, <code>std::lock_guard</code>, and <code>std::fstream</code> all rely on this.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q47.</span> What is the Rule of Three?</div>
+<textarea class="ansinput" data-qid="47" data-topic="12 Destructors &amp; RAII" data-q="What is the Rule of Three?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>If a class needs a custom <strong>destructor</strong>, it almost certainly also needs a custom <strong>copy constructor</strong> and <strong>copy assignment operator</strong>. Why: a class that owns a raw resource and defines only a destructor gets a compiler-generated <strong>shallow copy</strong> — two objects end up owning the same pointer, and when both destruct, the memory is freed twice (<strong>double-free</strong>). Defining all three (deep copy) prevents it. (C++11 adds move ctor/assignment → Rule of Five.)</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q48.</span> In what order are members and base/derived subobjects destroyed?</div>
+<textarea class="ansinput" data-qid="48" data-topic="12 Destructors &amp; RAII" data-q="In what order are members and base/derived subobjects destroyed?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong>Members</strong> are destroyed in the <strong>reverse</strong> order of their declaration. For an inheritance chain the <strong>derived</strong> destructor runs first, then the <strong>base</strong> destructor — the mirror image of construction (base→derived to construct, derived→base to destroy).</p></div></details></div>
+<div class="qtopic"><span class="n">13</span> Inheritance</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q49.</span> What is object slicing?</div>
+<textarea class="ansinput" data-qid="49" data-topic="13 Inheritance" data-q="What is object slicing?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Slicing happens when you copy a <strong>derived</strong> object into a <strong>base</strong> object *by value* — only the base part is copied and the derived part is 'sliced off', so overrides and extra data are lost.</p>
+<pre>Derived d;
+Base b = d;    // SLICED: b holds only the Base part
+Base&amp; r = d;   // OK: alias, full object, polymorphism works
+Base* p = &amp;d;  // OK: pointer, full object</pre>
+<p>Avoid it by handling polymorphic objects through base <strong>pointers or references</strong>, never by value.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q50.</span> Who can access a <code>protected</code> member?</div>
+<textarea class="ansinput" data-qid="50" data-topic="13 Inheritance" data-q="Who can access a `protected` member?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>A <code>protected</code> member is accessible to the class's <strong>own methods</strong> and to the methods of its <strong>derived classes</strong> ('the family') — but not to outside code. That's the key difference from <code>private</code>, which is accessible <strong>only</strong> to the class's own methods, not even derived classes. <code>protected</code> lets you share implementation down the inheritance chain while hiding it from the outside world.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q51.</span> In what order are the base and derived parts constructed and destroyed?</div>
+<textarea class="ansinput" data-qid="51" data-topic="13 Inheritance" data-q="In what order are the base and derived parts constructed and destroyed?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong>Construction:</strong> base first, then derived — the base subobject must be fully built before the derived part relies on it. <strong>Destruction:</strong> the reverse — derived first, then base. A derived object physically contains the base subobject laid out first.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q52.</span> What is the difference between an 'is-a' and a 'has-a' relationship?</div>
+<textarea class="ansinput" data-qid="52" data-topic="13 Inheritance" data-q="What is the difference between an &#x27;is-a&#x27; and a &#x27;has-a&#x27; relationship?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong>is-a</strong> means one type is a kind of another (a <code>Car</code> <strong>is a</strong> <code>Vehicle</code>) — modelled with <strong>inheritance</strong>. <strong>has-a</strong> means one type contains another (a <code>Car</code> <strong>has an</strong> <code>Engine</code>) — modelled with <strong>composition</strong> (a member object). A common guideline is to prefer composition unless the relationship is genuinely is-a.</p></div></details></div>
+<div class="qtopic"><span class="n">14</span> Virtual Functions</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q53.</span> What does <code>a-&gt;speak()</code> print here, and why?</div>
+<div class="qnote"><pre>struct Animal { void speak(){cout&lt;&lt;"Animal";} };  // not virtual
+struct Dog : Animal { void speak(){cout&lt;&lt;"Dog";} };
+Animal* a = new Dog();
+a-&gt;speak();</pre></div>
+<textarea class="ansinput" data-qid="53" data-topic="14 Virtual Functions" data-q="What does `a-&gt;speak()` print here, and why?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>It prints <strong>"Animal"</strong>. Because <code>speak()</code> is <strong>not virtual</strong>, the call uses <strong>static dispatch</strong> — the version is chosen at compile time from the <strong>pointer's type</strong> (<code>Animal*</code>), so <code>Animal::speak</code> runs regardless of the real object. If you mark <code>speak()</code> <strong><code>virtual</code></strong>, it switches to <strong>dynamic dispatch</strong> — resolved at runtime from the object's *actual* type via the vtable — and it would print "Dog" instead.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q54.</span> How does a virtual call select the right function at runtime, using the vtable and vptr?</div>
+<textarea class="ansinput" data-qid="54" data-topic="14 Virtual Functions" data-q="How does a virtual call select the right function at runtime, using the vtable and vptr?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Each class with virtual functions has one <strong>vtable</strong> — an array of function pointers, one slot per virtual function (overrides point to the derived versions). Each <strong>object</strong> stores a hidden <strong>vptr</strong> pointing to its class's vtable. A call <code>p-&gt;speak()</code> follows the object's vptr to its vtable, indexes the fixed slot for <code>speak</code>, and calls whatever pointer is there — so a <code>Dog</code> object's vptr leads to <code>Dog::speak</code>. That runtime lookup is dynamic dispatch.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q55.</span> What is the cost of using virtual functions?</div>
+<textarea class="ansinput" data-qid="55" data-topic="14 Virtual Functions" data-q="What is the cost of using virtual functions?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Memory: every polymorphic object stores a hidden <strong>vptr</strong> (~8 bytes on 64-bit), plus one vtable per class. Speed: each virtual call adds <strong>one indirection</strong> (load vptr → load slot → call) and usually <strong>can't be inlined</strong>, since the target is chosen at runtime. A class with <strong>no</strong> virtual functions has no vtable/vptr and pays nothing.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q56.</span> What does the <code>override</code> specifier do, and why is it worth adding?</div>
+<textarea class="ansinput" data-qid="56" data-topic="14 Virtual Functions" data-q="What does the `override` specifier do, and why is it worth adding?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><code>override</code> tells the compiler 'this function is meant to override a base <code>virtual</code> with a matching signature.' If it *doesn't* actually match (a typo, wrong <code>const</code>, wrong parameters), you get a <strong>compile error</strong> instead of silently creating a brand-new function that never gets called. So it catches a common, hard-to-spot bug and documents intent.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q57.</span> What does <code>final</code> do in C++?</div>
+<textarea class="ansinput" data-qid="57" data-topic="14 Virtual Functions" data-q="What does `final` do in C++?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>On a <strong>virtual function</strong>, <code>final</code> forbids any further overriding of it in subclasses. On a <strong>class</strong>, <code>final</code> forbids inheriting from that class at all. It's a way to lock down an inheritance hierarchy (and can help the compiler devirtualize calls for speed).</p></div></details></div>
+<div class="qtopic"><span class="n">15</span> Interfaces / Abstract Classes</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q58.</span> What makes a class abstract in C++?</div>
+<textarea class="ansinput" data-qid="58" data-topic="15 Interfaces / Abstract Classes" data-q="What makes a class abstract in C++?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>A class becomes <strong>abstract</strong> as soon as it declares at least one <strong>pure virtual</strong> function (<code>virtual void f() = 0;</code>). An abstract class <strong>cannot be instantiated</strong> directly — <code>Shape s;</code> is a compile error.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q59.</span> If you can't instantiate an abstract class, what CAN you do with it?</div>
+<textarea class="ansinput" data-qid="59" data-topic="15 Interfaces / Abstract Classes" data-q="If you can&#x27;t instantiate an abstract class, what CAN you do with it?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>You use <strong>pointers or references</strong> to it — that's the whole point of an abstract base: <code>Shape* s = new Circle();</code>. As long as the derived class (<code>Circle</code>) overrides <strong>every</strong> pure virtual, it's concrete and can be created, and you manipulate it polymorphically through the abstract base pointer/reference.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q60.</span> What is the difference between an abstract class and an interface in C++?</div>
+<textarea class="ansinput" data-qid="60" data-topic="15 Interfaces / Abstract Classes" data-q="What is the difference between an abstract class and an interface in C++?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Both rely on pure virtuals, but: an <strong>abstract class</strong> has <strong>at least one</strong> pure virtual and may *also* have data members and implemented (normal virtual) methods. An <strong>interface</strong> is the special case where <strong>every</strong> function is pure virtual and there's <strong>no data</strong> — a pure contract. C++ has no <code>interface</code> keyword; it's a convention built from an all-pure-virtual abstract class.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q61.</span> Why must an interface / polymorphic base declare a virtual destructor?</div>
+<textarea class="ansinput" data-qid="61" data-topic="15 Interfaces / Abstract Classes" data-q="Why must an interface / polymorphic base declare a virtual destructor?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Because clients hold and delete derived objects <strong>through base pointers</strong> (<code>Base* p = new Derived; ... delete p;</code>). If the base destructor isn't virtual, <code>delete p</code> only runs <code>~Base()</code> and the derived part leaks (undefined behaviour). A <code>virtual ~Base() = default;</code> ensures the full derived destructor chain runs.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q62.</span> Can an abstract class also contain normal (non-pure) methods with bodies?</div>
+<textarea class="ansinput" data-qid="62" data-topic="15 Interfaces / Abstract Classes" data-q="Can an abstract class also contain normal (non-pure) methods with bodies?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Yes. An abstract class can mix <strong>pure virtuals</strong> (which every subclass must implement) with ordinary <strong>virtual methods that have bodies</strong> (shared default behaviour). This is the *Template Method* pattern: the base defines a skeleton, forcing subclasses to fill in the pure-virtual steps while reusing the implemented ones.</p></div></details></div>
+<div class="qcat">C++ Language &amp; Safety</div>
+<div class="qtopic"><span class="n">16</span> const, constexpr &amp; volatile</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q63.</span> Which of these compile, and which is an error?</div>
+<div class="qnote"><pre>int n = getInput();
+const int a = n;
+constexpr int b = n;
+constexpr int c = 42;</pre></div>
+<textarea class="ansinput" data-qid="63" data-topic="16 const, constexpr &amp; volatile" data-q="Which of these compile, and which is an error?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><code>a</code> and <code>c</code> compile; <code>b</code> is an <strong>error</strong>. <code>const int a = n;</code> is fine — <code>const</code> only means 'won't change after init', and initializing it from a <strong>runtime</strong> value is legal. <code>constexpr int b = n;</code> fails because <code>constexpr</code> demands a value known at <strong>compile time</strong>, but <code>n</code> came from runtime input. <code>constexpr int c = 42;</code> is fine — 42 is a compile-time constant.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q64.</span> What is the core difference between <code>const</code> and <code>constexpr</code>?</div>
+<textarea class="ansinput" data-qid="64" data-topic="16 const, constexpr &amp; volatile" data-q="What is the core difference between `const` and `constexpr`?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><code>const</code> means <strong>read-only after initialization</strong> — but the value may be computed at <strong>runtime</strong>. <code>constexpr</code> is stronger: the value (or function result) must be <strong>computable at compile time</strong>, so it can be used where the language *requires* a compile-time constant (array sizes, template arguments, <code>switch</code> cases). Every <code>constexpr</code> is implicitly <code>const</code>; not every <code>const</code> is <code>constexpr</code>.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q65.</span> Is <code>volatile</code> a correct tool for synchronizing a variable between threads?</div>
+<textarea class="ansinput" data-qid="65" data-topic="16 const, constexpr &amp; volatile" data-q="Is `volatile` a correct tool for synchronizing a variable between threads?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong>No.</strong> <code>volatile</code> only tells the compiler 'don't optimize away or cache accesses — re-read from memory each time', which is for memory-mapped hardware registers and signal handlers. It provides <strong>no atomicity and no memory-ordering guarantees</strong>, so it can't safely synchronize threads. Use <strong><code>std::atomic</code></strong> (or a mutex) for that — those give the real guarantees.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q66.</span> When does a <code>constexpr</code> function run at runtime instead of compile time?</div>
+<textarea class="ansinput" data-qid="66" data-topic="16 const, constexpr &amp; volatile" data-q="When does a `constexpr` function run at runtime instead of compile time?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>When you call it with <strong>arguments that aren't known at compile time</strong>. Given compile-time constant arguments in a constant context it runs at <strong>compile time</strong>; given a runtime value it simply runs at <strong>runtime</strong> like an ordinary function.</p>
+<pre>constexpr int sq(int x){ return x*x; }
+constexpr int a = sq(5);       // compile time
+int y = read(); int b = sq(y); // runtime</pre></div></details></div>
+<div class="qtopic"><span class="n">17</span> Compile-time Constants &amp; VLAs</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q67.</span> Two of these are standard C++ and one is not — which one, and what is it called?</div>
+<div class="qnote"><pre>constexpr int s1 = 5*4; int a[s1];
+const     int s2 = 5*4; int b[s2];
+          int s3 = 5*4; int c[s3];</pre></div>
+<textarea class="ansinput" data-qid="67" data-topic="17 Compile-time Constants &amp; VLAs" data-q="Two of these are standard C++ and one is not — which one, and what is it called?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>The third — <code>int s = 5*4; int c[s];</code> — is <strong>not standard C++</strong>. Because <code>s</code> is a plain (non-const) <code>int</code>, it's a runtime value, so <code>c[s]</code> is a <strong>VLA (Variable Length Array)</strong>. The <code>constexpr</code> and <code>const</code> versions are standard, because both give a compile-time constant size.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q68.</span> Your <code>int a[n]</code> (runtime <code>n</code>) compiled fine on g++ — how do you check whether it's actually standard C++?</div>
+<textarea class="ansinput" data-qid="68" data-topic="17 Compile-time Constants &amp; VLAs" data-q="Your `int a[n]` (runtime `n`) compiled fine on g++ — how do you check whether it&#x27;s actually standard C++?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Add <strong><code>-pedantic</code></strong>: <code>g++ -std=c++17 -pedantic t.cpp</code> warns 'ISO C++ forbids variable length array' — proving it's a non-standard <strong>GNU extension</strong>, not standard C++. Add <strong><code>-pedantic-errors</code></strong> to make it a hard error. (MSVC rejects it outright.) A clean default compile on g++ only means *g++ allows the extension*, not that the standard does.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q69.</span> Does the VLA warning depend on which C++ version you pick (<code>-std=c++11</code> vs <code>c++20</code>)?</div>
+<textarea class="ansinput" data-qid="69" data-topic="17 Compile-time Constants &amp; VLAs" data-q="Does the VLA warning depend on which C++ version you pick (`-std=c++11` vs `c++20`)?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>No. VLAs were never part of <strong>any</strong> C++ standard (proposed for C++14, then removed). So the <code>-Wvla</code> warning appears under <code>-pedantic</code> regardless of the <code>-std</code> — it depends on the <strong>flag</strong> (<code>-pedantic</code>), not the version. It vanishes only when you drop <code>-pedantic</code> (extensions on).</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q70.</span> Which array sizes ARE valid standard C++?</div>
+<textarea class="ansinput" data-qid="70" data-topic="17 Compile-time Constants &amp; VLAs" data-q="Which array sizes ARE valid standard C++?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>A size that is a <strong>compile-time constant</strong>: either a <code>constexpr</code> value, or a <code>const</code> integer initialized with a constant expression (e.g. <code>const int n = 4*5;</code>). A plain mutable <code>int</code> — even one obviously set to a fixed value — does <strong>not</strong> qualify and makes the array a (non-standard) VLA.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q71.</span> What runtime clue reveals that an array is actually a VLA?</div>
+<textarea class="ansinput" data-qid="71" data-topic="17 Compile-time Constants &amp; VLAs" data-q="What runtime clue reveals that an array is actually a VLA?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><code>sizeof</code>. For a normal array, <code>sizeof(arr)</code> is a <strong>compile-time</strong> constant. For a <strong>VLA</strong>, the size isn't known until the program runs, so <code>sizeof(arr)</code> is computed at <strong>runtime</strong>. If <code>sizeof</code> has to be evaluated at run time, you're looking at a VLA.</p></div></details></div>
+<div class="qtopic"><span class="n">18</span> Arrays &amp; Memory Contiguity</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q72.</span> An array must be laid out contiguously — is that guaranteed in virtual memory or in physical RAM?</div>
+<textarea class="ansinput" data-qid="72" data-topic="18 Arrays &amp; Memory Contiguity" data-q="An array must be laid out contiguously — is that guaranteed in virtual memory or in physical RAM?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>In the process's <strong>virtual</strong> address space. Indexing computes <code>base + i*sizeof(element)</code> and relies on elements sitting one after another *virtually*. In <strong>physical</strong> RAM the array's pages can be scattered across arbitrary frames — that's fine, because the <strong>page table</strong> maps the contiguous virtual pages onto those scattered frames, so the program only ever sees one clean contiguous block.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q73.</span> How does the compiler compute the address of <code>arr[i]</code>?</div>
+<textarea class="ansinput" data-qid="73" data-topic="18 Arrays &amp; Memory Contiguity" data-q="How does the compiler compute the address of `arr[i]`?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>As <strong><code>base_address + i * sizeof(element)</code></strong> — a single multiply-and-add, no lookup table (which is why indexing is O(1)). This formula is exactly why an array <strong>must be contiguous</strong>: element <code>i</code> has to sit precisely <code>i</code> element-widths after the start.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q74.</span> An <code>int arr[100000]</code> is about 400 KB — should it live on the stack or the heap, and why?</div>
+<textarea class="ansinput" data-qid="74" data-topic="18 Arrays &amp; Memory Contiguity" data-q="An `int arr[100000]` is about 400 KB — should it live on the stack or the heap, and why?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>On the <strong>heap</strong> — <code>new int[100000]</code> or, better, <code>std::vector&lt;int&gt;</code>. A <strong>local</strong> array that big can <strong>overflow the stack</strong>, which is typically only 1–8 MB and shared by all frames in the call chain. Small fixed arrays are fine on the stack; large ones belong on the heap.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q75.</span> With demand paging, is the physical RAM for a big <code>new</code> array allocated immediately?</div>
+<textarea class="ansinput" data-qid="75" data-topic="18 Arrays &amp; Memory Contiguity" data-q="With demand paging, is the physical RAM for a big `new` array allocated immediately?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>No. The <strong>virtual</strong> address range is reserved right away (so the array looks allocated and contiguous), but the <strong>physical frames</strong> are typically handed out <strong>lazily</strong>, on first touch of each page (via page faults). So memory you allocate but never write may never consume physical RAM.</p></div></details></div>
+<div class="qtopic"><span class="n">19</span> Endianness</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q76.</span> On a little-endian machine, how is the int <code>500</code> (<code>0x000001F4</code>) laid out byte by byte in memory?</div>
+<textarea class="ansinput" data-qid="76" data-topic="19 Endianness" data-q="On a little-endian machine, how is the int `500` (`0x000001F4`) laid out byte by byte in memory?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>As <strong><code>F4 01 00 00</code></strong> — least-significant byte first. The value's bytes are <code>00 00 01 F4</code> (most-significant first, the way we write it); little-endian stores them <strong>reversed</strong>, so to reconstruct the value you flip them back: <code>F4 01 00 00</code> → <code>0x000001F4</code> = 500. Small values hide this (5 is <code>05 00 00 00</code>, and the leading <code>05</code> *looks* right).</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q77.</span> If you <code>cout &lt;&lt; somePointer;</code>, do you see the reversed little-endian bytes or the real address?</div>
+<textarea class="ansinput" data-qid="77" data-topic="19 Endianness" data-q="If you `cout &lt;&lt; somePointer;`, do you see the reversed little-endian bytes or the real address?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>You see the <strong>real, human-readable address</strong> (most-significant-first, e.g. <code>0x7ffee3a4b5c8</code>) — <strong>not</strong> reversed. Printing shows the *value*, and the CPU has already read the bytes back in the correct order. You only see the reversed little-endian bytes if you deliberately inspect raw memory (walking <code>(unsigned char*)&amp;p</code>, or a hex/debugger view).</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q78.</span> Is a pointer affected by endianness?</div>
+<textarea class="ansinput" data-qid="78" data-topic="19 Endianness" data-q="Is a pointer affected by endianness?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Yes. A pointer is just a <strong>multi-byte integer</strong> (8 bytes on 64-bit) that holds an address, so it's stored in the machine's endianness — little-endian on x86, meaning its bytes appear reversed in a raw memory dump, exactly like any <code>int</code>.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q79.</span> How do you detect at runtime whether a machine is little- or big-endian?</div>
+<textarea class="ansinput" data-qid="79" data-topic="19 Endianness" data-q="How do you detect at runtime whether a machine is little- or big-endian?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Store 1 in an int and look at its first byte:</p>
+<pre>int n = 1;
+char* c = (char*)&amp;n;
+if (*c == 1) puts("little-endian");  // low byte holds the 1
+else         puts("big-endian");     // low byte is 0</pre>
+<p>On little-endian the least-significant byte (the <code>01</code>) sits at the lowest address, so <code>*c == 1</code>.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q80.</span> Which values are immune to endianness?</div>
+<textarea class="ansinput" data-qid="80" data-topic="19 Endianness" data-q="Which values are immune to endianness?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong>Single-byte</strong> types — <code>char</code>, <code>uint8_t</code>, <code>bool</code> — because one byte has no ordering to reverse. Endianness only concerns multi-byte values (<code>short</code>, <code>int</code>, <code>long</code>, pointers), and even then it's visible only when you look at the raw bytes (hex dump, <code>char*</code>, or data sent between machines).</p></div></details></div>
+<div class="qtopic"><span class="n">20</span> Undefined Behavior &amp; Bounds Checking</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q81.</span> This program prints <code>4</code> and exits cleanly. Is it correct?</div>
+<div class="qnote"><pre>std::array&lt;int,5&gt; a;
+a[10] = 4;
+cout &lt;&lt; a[10];</pre></div>
+<textarea class="ansinput" data-qid="81" data-topic="20 Undefined Behavior &amp; Bounds Checking" data-q="This program prints `4` and exits cleanly. Is it correct?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong>No — it is undefined behaviour.</strong> <code>a</code> has valid indices 0–4, but you write to index 10. <code>std::array::operator[]</code> does <strong>no bounds checking</strong>, so it just computes an out-of-bounds address and writes there. It *happened* not to crash and printed <code>4</code>, but that's luck — the same code could crash, corrupt another variable, or behave differently on another compiler/run. 'It printed 4' is not proof of correctness.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q82.</span> Which access is bounds-checked, and what does it do on a bad index?</div>
+<textarea class="ansinput" data-qid="82" data-topic="20 Undefined Behavior &amp; Bounds Checking" data-q="Which access is bounds-checked, and what does it do on a bad index?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><code>.at(i)</code> is bounds-checked. On an out-of-range index it <strong>throws <code>std::out_of_range</code></strong> (with a descriptive message via <code>e.what()</code>), instead of silently corrupting memory like <code>[]</code>. So <code>a.at(10)</code> on a size-5 array throws rather than doing UB.</p>
+<pre>a.at(10) = 4;  // throws std::out_of_range</pre></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q83.</span> Why does C++ leave <code>operator[]</code> unchecked by default?</div>
+<textarea class="ansinput" data-qid="83" data-topic="20 Undefined Behavior &amp; Bounds Checking" data-q="Why does C++ leave `operator[]` unchecked by default?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Because of the principle <strong>'don't pay for what you don't use'</strong> — a bounds check on *every* element access adds a comparison that's costly in tight numeric loops, so <code>[]</code> is fast and trusts the programmer. (Java/Python bounds-check *always*: safer, but you pay on every access with no opt-out.) C++ gives you both: fast <code>[]</code> when you've verified the index, and checked <code>.at()</code> when you want the safety net.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q84.</span> Name three different things undefined behaviour is allowed to do.</div>
+<textarea class="ansinput" data-qid="84" data-topic="20 Undefined Behavior &amp; Bounds Checking" data-q="Name three different things undefined behaviour is allowed to do." rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>It may: (1) <strong>appear to work</strong> (produce the expected output, as in the <code>a[10]</code> example), (2) <strong>crash</strong> (e.g. a segfault), or (3) <strong>silently corrupt</strong> other memory (overwrite a nearby variable, the return address, etc.). Because the behaviour is undefined it can also differ across compilers, optimization levels, and runs — which is what makes UB dangerous.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q85.</span> Which compiler flag would have caught the out-of-bounds write at runtime during testing?</div>
+<textarea class="ansinput" data-qid="85" data-topic="20 Undefined Behavior &amp; Bounds Checking" data-q="Which compiler flag would have caught the out-of-bounds write at runtime during testing?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong><code>-fsanitize=address</code></strong> (AddressSanitizer) — it instruments the program and reports a <code>stack-buffer-overflow</code> when the bad access actually runs. Add <strong><code>,undefined</code></strong> (<code>-fsanitize=address,undefined</code>) to also catch other undefined behaviour with UBSan.</p></div></details></div>
+<div class="qtopic"><span class="n">21</span> std::array vs std::vector</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q86.</span> When should you choose <code>std::array</code> rather than <code>std::vector</code>?</div>
+<textarea class="ansinput" data-qid="86" data-topic="21 std::array vs std::vector" data-q="When should you choose `std::array` rather than `std::vector`?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Choose <strong><code>std::array&lt;T,N&gt;</code></strong> when the element count is <strong>fixed and known at compile time</strong> — it lives on the stack, has zero heap overhead, and never resizes. Choose <strong><code>std::vector&lt;T&gt;</code></strong> instead when the count is <strong>unknown or changes at runtime</strong> — it lives on the heap and grows via <code>push_back</code>/<code>resize</code>. Rule of thumb: fixed → array, growable → vector.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q87.</span> How does a <code>std::vector</code> grow when you keep adding elements?</div>
+<textarea class="ansinput" data-qid="87" data-topic="21 std::array vs std::vector" data-q="How does a `std::vector` grow when you keep adding elements?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>You add with <strong><code>push_back</code></strong> (or <code>resize</code>/<code>insert</code>); when it runs out of room it allocates a <strong>bigger block on the heap</strong>, moves/copies the existing elements into it, and frees the old block. Its element data always lives on the <strong>heap</strong> (the small <code>vector</code> object itself — pointer, size, capacity — may sit on the stack).</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q88.</span> What is the difference between a vector's <code>size()</code> and its <code>capacity()</code>?</div>
+<textarea class="ansinput" data-qid="88" data-topic="21 std::array vs std::vector" data-q="What is the difference between a vector&#x27;s `size()` and its `capacity()`?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><code>size()</code> is the number of elements <strong>currently in use</strong>. <code>capacity()</code> is how many elements the currently-allocated block can hold <strong>before it must reallocate</strong>. Capacity is usually ≥ size and grows in chunks (often doubling), so not every <code>push_back</code> triggers a reallocation. <code>std::array</code> has only a fixed size — no separate capacity.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q89.</span> Do both <code>array</code> and <code>vector</code> offer a bounds-checked access?</div>
+<textarea class="ansinput" data-qid="89" data-topic="21 std::array vs std::vector" data-q="Do both `array` and `vector` offer a bounds-checked access?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Yes — both provide <code>.at(i)</code> (bounds-checked, throws <code>std::out_of_range</code>) and <code>operator[]</code> (unchecked, fast). The choice between checked and unchecked access is the same for both containers.</p></div></details></div>
+<div class="qtopic"><span class="n">22</span> Exceptions &amp; try/catch</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q90.</span> Calling <code>a.at(10)</code> on a size-5 array printed 'Aborted (core dumped)'. Whose fault is the crash?</div>
+<textarea class="ansinput" data-qid="90" data-topic="22 Exceptions &amp; try/catch" data-q="Calling `a.at(10)` on a size-5 array printed &#x27;Aborted (core dumped)&#x27;. Whose fault is the crash?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>The <strong>caller's</strong> — for not handling the exception. <code>.at()</code> did its job: it detected the out-of-range index and <strong>threw</strong> <code>std::out_of_range</code>. Because nothing <strong>caught</strong> it, the exception propagated up to <code>std::terminate</code>, which aborts the program. The crash means 'an error was reported and nobody handled it', not that <code>.at()</code> is broken. (Contrast <code>[]</code>, which wouldn't even tell you.)</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q91.</span> Rewrite the call so the program reports the error and keeps running.</div>
+<textarea class="ansinput" data-qid="91" data-topic="22 Exceptions &amp; try/catch" data-q="Rewrite the call so the program reports the error and keeps running." rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Wrap it in <code>try</code>/<code>catch</code>:</p>
+<pre>try {
+    a.at(10) = 4;
+} catch (const std::out_of_range&amp; e) {
+    std::cout &lt;&lt; "Bad index: " &lt;&lt; e.what() &lt;&lt; '\n';
+}
+std::cout &lt;&lt; "still running\n";   // reached</pre>
+<p>Now the exception is caught and handled, and execution continues past the <code>try/catch</code> instead of aborting.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q92.</span> Should you catch an exception by value or by <code>const</code> reference, and why?</div>
+<textarea class="ansinput" data-qid="92" data-topic="22 Exceptions &amp; try/catch" data-q="Should you catch an exception by value or by `const` reference, and why?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>By <strong><code>const</code> reference</strong> (<code>catch (const std::exception&amp; e)</code>). Catching <strong>by value</strong> copies the exception object and can <strong>slice</strong> it — if the real exception is a derived type, the copy keeps only the base part, losing information (and its overridden <code>what()</code>). A <code>const&amp;</code> binds to the actual object with no copy and no slicing.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q93.</span> What does <code>e.what()</code> return?</div>
+<textarea class="ansinput" data-qid="93" data-topic="22 Exceptions &amp; try/catch" data-q="What does `e.what()` return?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>A C-style string (<code>const char*</code>) describing the error — the exception's message. For <code>std::out_of_range</code> from <code>.at()</code>, it includes details such as the bad index and the container size.</p></div></details></div>
+<div class="qtopic"><span class="n">23</span> AddressSanitizer &amp; Debugging Tools</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q94.</span> You built with <code>-fsanitize=address</code> and compiling produced no error — why hasn't AddressSanitizer reported anything yet?</div>
+<textarea class="ansinput" data-qid="94" data-topic="23 AddressSanitizer &amp; Debugging Tools" data-q="You built with `-fsanitize=address` and compiling produced no error — why hasn&#x27;t AddressSanitizer reported anything yet?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Because AddressSanitizer is a <strong>runtime</strong> detector, not a compile-time one. Compiling only *instruments* the code; the error is reported when the <strong>bad access actually executes</strong>. You must <strong>run</strong> the program (<code>./prog</code>) and reach the offending line for ASan to print its report. A clean compile — or a run that never hits the bug — shows nothing.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q95.</span> How does AddressSanitizer detect an out-of-bounds access?</div>
+<textarea class="ansinput" data-qid="95" data-topic="23 AddressSanitizer &amp; Debugging Tools" data-q="How does AddressSanitizer detect an out-of-bounds access?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>It surrounds each variable/allocation with poisoned <strong>redzones</strong> (guard bytes with no real data) and keeps 'shadow memory' marking which bytes are valid. The instant your program reads or writes into a redzone (or freed memory), ASan detects the poisoned access and reports it — with the file/line, the variable, and byte offsets. They're essentially tripwires around your memory.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q96.</span> Does AddressSanitizer report every error in a run, or stop at the first one?</div>
+<textarea class="ansinput" data-qid="96" data-topic="23 AddressSanitizer &amp; Debugging Tools" data-q="Does AddressSanitizer report every error in a run, or stop at the first one?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>By default it <strong>aborts on the first error</strong> (you'll see <code>==pid==ABORTING</code>). To make it report the error and keep going, set the environment option <strong><code>ASAN_OPTIONS=halt_on_error=0</code></strong> before running.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q97.</span> Name two other tools or flags for finding C++ memory / undefined-behaviour bugs.</div>
+<textarea class="ansinput" data-qid="97" data-topic="23 AddressSanitizer &amp; Debugging Tools" data-q="Name two other tools or flags for finding C++ memory / undefined-behaviour bugs." rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong>UBSan</strong> (<code>-fsanitize=undefined</code>) for undefined behaviour like signed overflow or bad shifts; <strong>valgrind</strong> (memcheck) for leaks and invalid accesses; and <strong>gdb</strong> for interactive debugging / core-dump inspection. ASan + UBSan together (<code>-fsanitize=address,undefined -g</code>) catch a large class of bugs during testing.</p></div></details></div>
+<div class="qcat">OS Memory &amp; Systems</div>
+<div class="qtopic"><span class="n">24</span> Paging &amp; Virtual Memory</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q98.</span> Why is a process divided into pages in the first place?</div>
+<textarea class="ansinput" data-qid="98" data-topic="24 Paging &amp; Virtual Memory" data-q="Why is a process divided into pages in the first place?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>So it <strong>doesn't need one big contiguous block of physical RAM</strong>. Once the process is cut into equal-size <strong>pages</strong>, each page can be placed into <strong>any free frame anywhere</strong> in RAM — no contiguous run required. This eliminates <strong>external fragmentation</strong> (enough total memory free, but scattered in gaps too small to use) and unlocks virtual memory, isolation, and sharing.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q99.</span> What is the difference between a page and a frame?</div>
+<textarea class="ansinput" data-qid="99" data-topic="24 Paging &amp; Virtual Memory" data-q="What is the difference between a page and a frame?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>A <strong>page</strong> is a fixed-size chunk of the <strong>program's content</strong> (a slice of code/heap/stack) — think of a chapter torn from a book. A <strong>frame</strong> is a fixed-size <strong>slot in physical RAM</strong> — a shelf slot that holds one page. They're the <strong>same size</strong>, and exactly <strong>one page fits in one frame</strong>. 'Page 3 is in frame 47' means page 3's actual bytes are stored in that physical frame.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q100.</span> Does virtual address space itself store any data or hold any RAM?</div>
+<textarea class="ansinput" data-qid="100" data-topic="24 Paging &amp; Virtual Memory" data-q="Does virtual address space itself store any data or hold any RAM?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>No. A virtual address is a <strong>per-process, imaginary label</strong> — it holds nothing itself and consumes no RAM. The real bytes live in physical <strong>frames</strong>; the <strong>page table</strong> translates each virtual address to the frame that actually stores the data. (Two different processes can even print the *same* virtual address mapping to completely different physical memory.)</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q101.</span> If a program's pages are scattered all over physical RAM, how does it still behave as if memory were one contiguous block?</div>
+<textarea class="ansinput" data-qid="101" data-topic="24 Paging &amp; Virtual Memory" data-q="If a program&#x27;s pages are scattered all over physical RAM, how does it still behave as if memory were one contiguous block?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>The <strong>page table</strong> maps each contiguous <strong>virtual</strong> page to whatever physical <strong>frame</strong> holds it, and the <strong>MMU</strong> performs that translation on <strong>every</strong> memory access. So the program always sees a clean, ordered, contiguous virtual layout, while the hardware quietly redirects each access to the scattered real location. Non-contiguous in RAM, contiguous to the program.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q102.</span> Beyond avoiding fragmentation, what benefits does paging unlock?</div>
+<textarea class="ansinput" data-qid="102" data-topic="24 Paging &amp; Virtual Memory" data-q="Beyond avoiding fragmentation, what benefits does paging unlock?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>(1) <strong>Virtual memory</strong> — a process can use more memory than physically exists (unused pages live on disk). (2) <strong>Isolation/protection</strong> — each process has its own page table, so it can't see another process's memory, and pages carry permission bits. (3) <strong>Sharing</strong> — one physical frame (e.g. a shared library like libc) can be mapped into many processes at once.</p></div></details></div>
+<div class="qtopic"><span class="n">25</span> MMU, TLB &amp; Multi-level Paging</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q103.</span> What does the MMU do on every memory access?</div>
+<textarea class="ansinput" data-qid="103" data-topic="25 MMU, TLB &amp; Multi-level Paging" data-q="What does the MMU do on every memory access?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>The <strong>MMU (Memory Management Unit)</strong> is dedicated <strong>hardware in the CPU</strong> that translates a <strong>virtual address into a physical address</strong> on *every* memory access — by walking the page table (or hitting the TLB) — and simultaneously <strong>checks the permission bits</strong> (present? writable? executable?), raising a page fault or protection fault if something is wrong. Software sets up the page tables; the MMU reads them and translates automatically.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q104.</span> A virtual address splits into two parts for translation — what are they, and what does each select?</div>
+<textarea class="ansinput" data-qid="104" data-topic="25 MMU, TLB &amp; Multi-level Paging" data-q="A virtual address splits into two parts for translation — what are they, and what does each select?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong>Page number</strong> and <strong>offset</strong>. The <strong>page number</strong> selects *which* page — looked up in the page table to get the physical <strong>frame</strong> number. The <strong>offset</strong> selects *where inside* that page/frame the byte is. Physical address = (frame base) + offset.</p>
+<pre>12290 with 4KB pages -&gt; page 3 (12290/4096), offset 2
+page 3 -&gt; frame 47 ; physical = frame47_base + 2</pre></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q105.</span> Why don't OSes use a single flat page table (on x86-64)?</div>
+<textarea class="ansinput" data-qid="105" data-topic="25 MMU, TLB &amp; Multi-level Paging" data-q="Why don&#x27;t OSes use a single flat page table (on x86-64)?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Because it would be enormous. With a 48-bit address and 4 KB pages there are 2^36 pages; a flat table of 8-byte entries is 2^36 × 8 = <strong>~512 GB per process</strong> — impossible, and almost all empty since a process uses a tiny slice of its address space. <strong>Multi-level paging</strong> uses a <strong>sparse tree</strong> of small (512-entry) tables and creates only the sub-tables for regions actually in use, shrinking it to a few KB.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q106.</span> How many levels does x86-64 paging use, and how is the address split?</div>
+<textarea class="ansinput" data-qid="106" data-topic="25 MMU, TLB &amp; Multi-level Paging" data-q="How many levels does x86-64 paging use, and how is the address split?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong>Four levels.</strong> The 48-bit virtual address splits into four <strong>9-bit</strong> indexes (one per level, each into a 512-entry table) plus a <strong>12-bit offset</strong> (4 KB pages): <code>9 + 9 + 9 + 9 + 12 = 48</code>. The MMU walks Table1→Table2→Table3→Table4 to reach the frame. (Newer CPUs offer a 5-level mode for a larger 57-bit space.)</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q107.</span> A multi-level walk costs several memory accesses per translation — what hides that cost?</div>
+<textarea class="ansinput" data-qid="107" data-topic="25 MMU, TLB &amp; Multi-level Paging" data-q="A multi-level walk costs several memory accesses per translation — what hides that cost?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>The <strong>TLB (Translation Lookaside Buffer)</strong> — a small, fast cache in the MMU that stores recent <strong>page→frame</strong> translations. On a TLB <strong>hit</strong>, the translation is instant and the multi-level walk is skipped. Thanks to locality, most accesses hit the TLB, so the expensive 4-level walk happens only on a miss.</p></div></details></div>
+<div class="qtopic"><span class="n">26</span> Allocation Methods &amp; Fragmentation</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q108.</span> Where is the wasted space in internal fragmentation versus external fragmentation?</div>
+<textarea class="ansinput" data-qid="108" data-topic="26 Allocation Methods &amp; Fragmentation" data-q="Where is the wasted space in internal fragmentation versus external fragmentation?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong>External</strong> fragmentation wastes memory in the <strong>gaps between</strong> allocations: enough total memory is free, but it's scattered in pieces too small (or separated by live allocations) to satisfy a large contiguous request. <strong>Internal</strong> fragmentation wastes memory <strong>inside</strong> an allocated block — the unused tail of the last page of a region. The names say it: *between* blocks (external) vs *inside* a block (internal).</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q109.</span> Why does paging cause internal fragmentation but eliminate external fragmentation?</div>
+<textarea class="ansinput" data-qid="109" data-topic="26 Allocation Methods &amp; Fragmentation" data-q="Why does paging cause internal fragmentation but eliminate external fragmentation?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Paging places each page into any free frame, so there are <strong>no unusable gaps between allocations</strong> → external fragmentation is gone. But a region rarely fills a whole number of pages, so the <strong>last page</strong> of each region is usually only partly used — the remainder is wasted <strong>inside</strong> that frame → internal fragmentation (bounded by page size − 1). It trades a large, scattered waste for a small, predictable one.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q110.</span> Why does internal fragmentation only affect the *last* page of a region?</div>
+<textarea class="ansinput" data-qid="110" data-topic="26 Allocation Methods &amp; Fragmentation" data-q="Why does internal fragmentation only affect the *last* page of a region?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Because all the <strong>earlier</strong> pages are <strong>completely full</strong> of the region's data — they flow continuously with no gaps. Only when you reach the end do you run out of data mid-page, leaving the tail of the <strong>final</strong> page unused. Every page before it is 100% packed, so there's nothing to waste there.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q111.</span> Is external fragmentation a memory-management method you can choose, like paging?</div>
+<textarea class="ansinput" data-qid="111" data-topic="26 Allocation Methods &amp; Fragmentation" data-q="Is external fragmentation a memory-management method you can choose, like paging?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>No — it's a <strong>problem / side effect</strong>, not a method. The methods are <strong>contiguous allocation</strong>, <strong>paging</strong>, and <strong>segmentation</strong>. Contiguous allocation and segmentation *suffer from* external fragmentation (variable-size, must-be-contiguous placement); <strong>paging is the method that cures it</strong>. You never 'choose external fragmentation' — it happens to you when you use a contiguous scheme.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q112.</span> What does each entry in a segment table store?</div>
+<textarea class="ansinput" data-qid="112" data-topic="26 Allocation Methods &amp; Fragmentation" data-q="What does each entry in a segment table store?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>A <strong>base</strong> (the segment's start address in physical memory) and a <strong>limit</strong> (its length). An address is <code>(segment number, offset)</code>. The <strong>limit</strong> provides <strong>protection</strong>: if the offset is ≥ the limit, the access is past the segment's end and is rejected — so a program can't read/write outside its segment. Segmentation is good for logical protection/sharing but reintroduces external fragmentation.</p></div></details></div>
+<div class="qtopic"><span class="n">27</span> Demand Paging, Page Faults &amp; Swapping</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q113.</span> Walk through exactly what happens on a page fault.</div>
+<textarea class="ansinput" data-qid="113" data-topic="27 Demand Paging, Page Faults &amp; Swapping" data-q="Walk through exactly what happens on a page fault." rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>1) The program touches a virtual page whose page-table entry is marked <strong>not present</strong>. 2) The CPU raises a <strong>page fault</strong> — a trap into the OS. 3) The OS finds a <strong>free frame</strong> (evicting a cold page to disk first if needed), 4) <strong>loads the page's bytes from disk</strong> into that frame, 5) <strong>updates the page table</strong> to mark it present and point at the frame, and 6) <strong>restarts the faulting instruction</strong>. The program resumes as if nothing happened — it just felt a small pause.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q114.</span> A page fault can be ~1000× slower than a RAM access — why is demand paging still a net win?</div>
+<textarea class="ansinput" data-qid="114" data-topic="27 Demand Paging, Page Faults &amp; Swapping" data-q="A page fault can be ~1000× slower than a RAM access — why is demand paging still a net win?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Because the cost is <strong>paid once per page</strong>, then that page sits in RAM for many fast reuses. Thanks to <strong>locality of reference</strong>, a program hammers a small <strong>working set</strong> of pages, so faults are rare relative to total accesses. Demand paging also avoids loading (and wasting RAM on) the large parts of a program you never touch, and speeds startup. Many faults are also 'minor' (no disk I/O). It only loses when the working set doesn't fit in RAM.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q115.</span> What is thrashing, and what causes it?</div>
+<textarea class="ansinput" data-qid="115" data-topic="27 Demand Paging, Page Faults &amp; Swapping" data-q="What is thrashing, and what causes it?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong>Thrashing</strong> is when the working set is <strong>larger than available RAM</strong>, so the OS is forced to constantly evict a page and almost immediately fault it back in. The machine spends most of its time doing disk I/O for paging instead of real work, and performance collapses. The fix is more RAM or a smaller working set (fewer concurrent processes).</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q116.</span> What is the difference between a minor and a major page fault?</div>
+<textarea class="ansinput" data-qid="116" data-topic="27 Demand Paging, Page Faults &amp; Swapping" data-q="What is the difference between a minor and a major page fault?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>A <strong>minor</strong> fault is resolved <strong>without disk I/O</strong> — the page is already in RAM (in the page cache, shared by another process, or a fresh zero-filled page); the OS just fixes the mapping. A <strong>major</strong> fault requires <strong>reading the page from disk</strong>, which is the slow, expensive kind. Most faults after warm-up are minor.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q117.</span> How is a page fault different from a segmentation fault?</div>
+<textarea class="ansinput" data-qid="117" data-topic="27 Demand Paging, Page Faults &amp; Swapping" data-q="How is a page fault different from a segmentation fault?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>A <strong>page fault</strong> is a *normal* event: the address is valid, the page just isn't in RAM yet, so the OS transparently loads it and continues. A <strong>segmentation fault</strong> is an *error*: the program accessed memory it isn't allowed to (unmapped or wrong permission), so the OS refuses and usually kills the process. Same hardware mechanism (a trap), opposite outcomes.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q118.</span> What is swapping, and which capability does it provide?</div>
+<textarea class="ansinput" data-qid="118" data-topic="27 Demand Paging, Page Faults &amp; Swapping" data-q="What is swapping, and which capability does it provide?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong>Swapping</strong> is evicting <strong>cold</strong> (rarely used) pages from RAM out to a reserved area on <strong>disk</strong> (the swap/page file) when RAM is full, freeing frames for pages needed now. It's what makes <strong>virtual memory</strong> possible: total memory in use across processes can <strong>exceed physical RAM</strong>, because RAM acts as a fast window over a larger space that overflows to disk.</p></div></details></div>
+<div class="qcat">Linux</div>
+<div class="qtopic"><span class="n">28</span> Filesystem &amp; Navigation</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q119.</span> Your program does <code>open("config.txt")</code>; it works from one directory but fails with 'file not found' from another. Why?</div>
+<textarea class="ansinput" data-qid="119" data-topic="28 Filesystem &amp; Navigation" data-q="Your program does `open(&quot;config.txt&quot;)`; it works from one directory but fails with &#x27;file not found&#x27; from another. Why?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><code>"config.txt"</code> is a <strong>relative</strong> path — it's resolved against the <strong>process's current working directory</strong>, not the location of the executable. Run the program from a directory that doesn't contain <code>config.txt</code> and the open fails. Fixes: use an <strong>absolute</strong> path, compute the path relative to the executable, or <code>chdir</code> to the expected directory. Very common bug.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q120.</span> What is the difference between an absolute and a relative path?</div>
+<textarea class="ansinput" data-qid="120" data-topic="28 Filesystem &amp; Navigation" data-q="What is the difference between an absolute and a relative path?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>An <strong>absolute</strong> path starts at the root <code>/</code> (e.g. <code>/home/anup/config.txt</code>) and means the same thing no matter your current directory. A <strong>relative</strong> path (e.g. <code>config.txt</code>, <code>../data/x</code>) is resolved from the <strong>current working directory</strong>, so its meaning changes with where you run the program. Absolute is the location-independent one.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q121.</span> What do <code>.</code> and <code>..</code> refer to in a path?</div>
+<textarea class="ansinput" data-qid="121" data-topic="28 Filesystem &amp; Navigation" data-q="What do `.` and `..` refer to in a path?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><code>.</code> is the <strong>current</strong> directory; <code>..</code> is its <strong>parent</strong> directory. So <code>./x</code> is <code>x</code> here, and <code>../x</code> is <code>x</code> one level up. They're used constantly in relative paths and in <code>cd ..</code>.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q122.</span> What does <code>ls -la</code> show that a plain <code>ls</code> does not?</div>
+<textarea class="ansinput" data-qid="122" data-topic="28 Filesystem &amp; Navigation" data-q="What does `ls -la` show that a plain `ls` does not?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Two things: <strong><code>-l</code></strong> gives the <strong>long format</strong> (permissions, owner, group, size, timestamp per entry), and <strong><code>-a</code></strong> shows <strong>all</strong> entries <strong>including hidden dotfiles</strong> (names starting with <code>.</code>, plus the <code>.</code> and <code>..</code> entries). Plain <code>ls</code> lists only the visible names.</p></div></details></div>
+<div class="qtopic"><span class="n">29</span> Permissions (rwx)</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q123.</span> What numeric permission mode does <code>-rwxr-xr-x</code> correspond to?</div>
+<textarea class="ansinput" data-qid="123" data-topic="29 Permissions (rwx)" data-q="What numeric permission mode does `-rwxr-xr-x` correspond to?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong>755.</strong> Ignore the leading <code>-</code> (it just marks a regular file; <code>d</code> would be a directory). Read the three triplets with r=4, w=2, x=1: owner <code>rwx</code> = 4+2+1 = <strong>7</strong>, group <code>r-x</code> = 4+0+1 = <strong>5</strong>, others <code>r-x</code> = <strong>5</strong> → <strong>755</strong>.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q124.</span> You compiled a program but <code>./prog</code> says 'Permission denied' — what's the most likely cause?</div>
+<textarea class="ansinput" data-qid="124" data-topic="29 Permissions (rwx)" data-q="You compiled a program but `./prog` says &#x27;Permission denied&#x27; — what&#x27;s the most likely cause?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>The binary is missing its <strong>execute (<code>x</code>) bit</strong>, so the kernel won't run it. Fix it with <strong><code>chmod +x prog</code></strong> (or <code>chmod 755 prog</code>). This is the #1 cause of 'Permission denied' for a script or a freshly created binary. (A compiled binary is usually 755; a source <code>.cpp</code> is 644 — no <code>x</code>, which is correct since you don't execute source.)</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q125.</span> When you access a file, how does the kernel decide which of the three rwx triplets to apply?</div>
+<textarea class="ansinput" data-qid="125" data-topic="29 Permissions (rwx)" data-q="When you access a file, how does the kernel decide which of the three rwx triplets to apply?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>The three triplets are for the file's <strong>owner</strong>, its <strong>group</strong>, and <strong>others</strong>. On each access the kernel checks your process's <strong>UID/GID</strong>: if you're the owner it uses the *owner* triplet; else if you're in the file's group, the *group* triplet; else the *others* triplet. Exactly one triplet applies — chosen most-specific-first — and it decides whether your requested r/w/x is allowed.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q126.</span> On a *directory*, what do r, w, and x each mean (they differ from a file)?</div>
+<textarea class="ansinput" data-qid="126" data-topic="29 Permissions (rwx)" data-q="On a *directory*, what do r, w, and x each mean (they differ from a file)?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>On a directory: <strong><code>r</code></strong> = list the names inside it; <strong><code>w</code></strong> = add/remove/rename entries (create or delete files in it); <strong><code>x</code></strong> = enter/traverse it (cd into it and reach files by name). Notably you need <code>x</code> on a directory just to reach files inside it, even if you already know their paths.</p></div></details></div>
+<div class="qtopic"><span class="n">30</span> chmod</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q127.</span> What is the difference between <code>chmod 755 f</code> and <code>chmod +x f</code>?</div>
+<textarea class="ansinput" data-qid="127" data-topic="30 chmod" data-q="What is the difference between `chmod 755 f` and `chmod +x f`?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><code>chmod 755 f</code> sets <strong>all three triplets explicitly and absolutely</strong> — owner <code>rwx</code>, group <code>r-x</code>, others <code>r-x</code> — overwriting whatever was there. <code>chmod +x f</code> is <strong>relative</strong>: it only <strong>adds</strong> the execute bit (for all three categories) and leaves the read/write bits untouched. Use numeric for an exact mode; symbolic to nudge one bit.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q128.</span> In symbolic <code>chmod</code>, how do you give execute permission to ONLY the owner?</div>
+<textarea class="ansinput" data-qid="128" data-topic="30 chmod" data-q="In symbolic `chmod`, how do you give execute permission to ONLY the owner?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><strong><code>chmod u+x file</code></strong> — <code>u</code> targets the owner (user) and <code>+x</code> adds execute, leaving group and others untouched. The target letters are <code>u</code>=owner, <code>g</code>=group, <code>o</code>=others, <code>a</code>=all. (<code>chmod +x file</code> with no letter behaves like <code>a+x</code> — execute for everyone.)</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q129.</span> Which permission bit is the usual culprit behind 'Permission denied' when running <code>./script.sh</code>?</div>
+<textarea class="ansinput" data-qid="129" data-topic="30 chmod" data-q="Which permission bit is the usual culprit behind &#x27;Permission denied&#x27; when running `./script.sh`?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>The <strong>execute (<code>x</code>)</strong> bit. Without it, the shell won't run the file even if it's readable. Fix with <code>chmod +x script.sh</code>. (For a script you also need a readable interpreter, but the missing <code>x</code> is the classic cause.)</p></div></details></div>
+<div class="qtopic"><span class="n">31</span> chown &amp; Ownership</div>
+<div class="qcard"><div class="qq"><span class="qnum">Q130.</span> Why can't a normal (non-root) user give their own file to another user with <code>chown</code>?</div>
+<textarea class="ansinput" data-qid="130" data-topic="31 chown &amp; Ownership" data-q="Why can&#x27;t a normal (non-root) user give their own file to another user with `chown`?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>Changing a file's <strong>owner</strong> requires <strong>root</strong>. If ordinary users could hand files away, they could dodge disk <strong>quotas</strong> (dump big files onto someone else) or plant files as another user — a security hole. So only root can change ownership. A regular user *can* change a file's <strong>group</strong> to one they belong to (<code>chgrp</code>), but not its owner.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q131.</span> Give the chown syntax for: owner+group, owner only, group only, and recursive.</div>
+<textarea class="ansinput" data-qid="131" data-topic="31 chown &amp; Ownership" data-q="Give the chown syntax for: owner+group, owner only, group only, and recursive." rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><pre>chown user:group file   # owner AND group
+chown user file         # owner only
+chown :group file       # group only (or: chgrp group file)
+chown -R user:group dir # recursive: dir and everything inside</pre></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q132.</span> How do ownership and the rwx bits work together to decide access?</div>
+<textarea class="ansinput" data-qid="132" data-topic="31 chown &amp; Ownership" data-q="How do ownership and the rwx bits work together to decide access?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p>They're checked <strong>together</strong> on every open/read/write/execute. The kernel compares the process's <strong>UID/GID</strong> to the file's <strong>owner and group</strong> to pick which rwx triplet applies (owner, group, or others), then checks whether that triplet grants the requested operation. So 'who owns it' selects *which* permissions, and the rwx bits say *what* those permissions are.</p></div></details></div>
+<div class="qcard"><div class="qq"><span class="qnum">Q133.</span> What does <code>id</code> show that <code>whoami</code> does not?</div>
+<textarea class="ansinput" data-qid="133" data-topic="31 chown &amp; Ownership" data-q="What does `id` show that `whoami` does not?" rows="3" placeholder="Type your answer here..."></textarea>
+<details class="ansbox"><summary>Show model answer</summary><div class="ans"><p><code>whoami</code> prints just your <strong>username</strong>. <code>id</code> prints your numeric <strong>UID</strong>, primary <strong>GID</strong>, and <strong>all group memberships</strong>. That extra detail is what matters for permissions, because the kernel checks those numeric IDs (not the name) against a file's owner/group to decide which rwx triplet applies to you.</p></div></details></div>
+<footer>Answers stay in this browser until you clear them. Download to share with your coach for grading.</footer></div>
+<script>
+(function(){
+  var KEY="anup_exam_answers_v1";
+  var boxes=[].slice.call(document.querySelectorAll("textarea.ansinput"));
+  var total=boxes.length;
+  function progress(){
+    var n=boxes.filter(function(b){return b.value.trim()!=="";}).length;
+    var el=document.getElementById("prog"); if(el) el.textContent="Answered "+n+" / "+total;
+  }
+  function save(){
+    var data={};
+    boxes.forEach(function(b){ if(b.value.trim()!=="") data[b.dataset.qid]=b.value; });
+    try{ localStorage.setItem(KEY, JSON.stringify(data)); }catch(e){}
+  }
+  function load(){
+    var data={};
+    try{ data=JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){}
+    boxes.forEach(function(b){ if(data[b.dataset.qid]!==undefined) b.value=data[b.dataset.qid]; });
+    progress();
+  }
+  boxes.forEach(function(b){ b.addEventListener("input", function(){ save(); progress(); }); });
+  function pad(n){return n<10?"0"+n:n;}
+  function download(){
+    var d=new Date();
+    var stamp=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+    var n=boxes.filter(function(b){return b.value.trim()!=="";}).length;
+    var out="# Anup — Exam Answers ("+stamp+")\n\nAnswered: "+n+" / "+total+"\n\n";
+    boxes.forEach(function(b){
+      out+="<!--Q"+b.dataset.qid+"|"+b.dataset.topic+"-->\n";
+      out+="**Q"+b.dataset.qid+". "+b.dataset.q+"**\n\nMy answer:\n"+(b.value.trim()||"(blank)")+"\n\n---\n\n";
+    });
+    var blob=new Blob([out],{type:"text/markdown"});
+    var a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="anup-exam-answers-"+stamp+".md";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  }
+  function imp(file){
+    var r=new FileReader();
+    r.onload=function(){
+      var parts=r.result.split(/<!--Q(\d+)\|[^>]*-->/);
+      for(var i=1;i<parts.length;i+=2){
+        var qid=parts[i]; var block=parts[i+1]||"";
+        var idx=block.indexOf("My answer:");
+        var ans = idx>=0 ? block.slice(idx+10) : "";
+        ans = ans.replace(/\n---\s*$/,"").trim();
+        if(ans==="(blank)") ans="";
+        var box=document.querySelector('textarea[data-qid="'+qid+'"]');
+        if(box) box.value=ans;
+      }
+      save(); progress(); alert("Answers loaded from file.");
+    };
+    r.readAsText(file);
+  }
+  var dl=document.getElementById("btn-download"); if(dl) dl.onclick=download;
+  var cl=document.getElementById("btn-clear"); if(cl) cl.onclick=function(){
+    if(confirm("Clear ALL your typed answers?")){ boxes.forEach(function(b){b.value="";}); save(); progress(); }
+  };
+  var fi=document.getElementById("file-import"); if(fi) fi.onchange=function(e){ if(e.target.files[0]) imp(e.target.files[0]); };
+  load();
+})();
+</script>
+</body></html>

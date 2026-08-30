@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>27 Demand Paging, Page Faults &amp; Swapping — Study</title><style>
+:root{--bg:#0e1118;--card:#171c26;--card2:#1e2431;--ink:#e8ecf5;--muted:#9aa4b8;--line:#28303f;
+--accent:#6ea8ff;--accent2:#54e0c0;--amber:#ffcf6b;--pink:#ff8aa0;--code:#0a0d15;}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#0c0f16,#11151f);color:var(--ink);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.65;font-size:16px}
+.wrap{max-width:860px;margin:0 auto;padding:34px 20px 90px}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-bottom:22px}
+.cat{display:inline-block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--accent2);
+background:rgba(84,224,192,.1);border:1px solid rgba(84,224,192,.25);padding:4px 10px;border-radius:20px}
+.numbadge{font-family:"SFMono-Regular",Consolas,monospace;color:var(--muted);font-weight:700}
+h1{font-size:30px;line-height:1.15;margin:6px 0 8px;font-weight:800}
+.summary{color:var(--muted);font-size:17px;margin:0 0 26px}
+h2{font-size:19px;margin:30px 0 10px;font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin:16px 0;box-shadow:0 10px 26px rgba(0,0,0,.25)}
+.keypoints{border-left:4px solid var(--accent2);background:rgba(84,224,192,.07)} .keypoints h2{margin-top:0;color:var(--accent2)}
+.confuse{border-left:4px solid var(--amber);background:rgba(255,207,107,.07)} .confuse h2{margin-top:0;color:var(--amber)}
+.testcta{border-left:4px solid var(--accent);background:rgba(110,168,255,.08)}
+.pair{margin:12px 0;padding:12px 14px;background:var(--card2);border:1px solid var(--line);border-radius:10px}
+.pair .vs{font-family:monospace;font-weight:700;color:var(--amber);font-size:14.5px;margin-bottom:5px}
+.pair .d{color:#dce2f0;font-size:14.5px}
+p{margin:11px 0;color:#dce2f0} ul{margin:10px 0;padding-left:22px} li{margin:6px 0}
+code{background:var(--card2);border:1px solid var(--line);padding:1px 6px;border-radius:5px;font-family:"SFMono-Regular",Consolas,monospace;font-size:13.5px;color:var(--accent2)}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto;
+font-family:"SFMono-Regular",Consolas,monospace;font-size:13px;color:#cdd6f4;line-height:1.5}
+pre code{background:none;border:none;padding:0;color:inherit}
+.nav{display:flex;justify-content:space-between;margin-top:34px;gap:10px}
+.nav a{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14px;flex:1}
+.nav a.next{text-align:right}
+footer{margin-top:40px;color:var(--muted);font-size:12.5px;text-align:center}
+.grp{margin:26px 0}
+.grp h2{color:var(--accent);border-bottom:1px solid var(--line);padding-bottom:6px;display:flex;justify-content:space-between}
+.tlist{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+.tlink{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 14px;display:flex;gap:12px;align-items:baseline}
+.tlink:hover{border-color:var(--accent);text-decoration:none}
+.tlink .n{font-family:monospace;font-weight:700;color:var(--accent2);flex:none}
+.tlink .n2{font-weight:700;color:var(--ink)} .tlink .s{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.bigbtn{display:inline-block;background:rgba(110,168,255,.12);border:1px solid rgba(110,168,255,.4);color:var(--accent);
+padding:12px 18px;border-radius:12px;font-weight:700;margin:6px 0}
+.qcat{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);font-weight:800;margin:34px 0 4px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.qtopic{font-weight:700;color:var(--ink);margin:22px 0 8px;font-size:16px}
+.qtopic .n{font-family:monospace;color:var(--accent2)}
+.count{color:var(--muted);font-size:13px;font-weight:400}
+.qcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 18px;margin:12px 0}
+.qq{font-weight:600;color:var(--ink);font-size:15.5px}
+.qnum{font-family:"SFMono-Regular",Consolas,monospace;color:var(--accent2);font-weight:700}
+.qnote{margin-top:9px;color:var(--muted);font-size:14px}
+.qnote pre{margin:8px 0}
+details.ansbox{margin-top:12px;border:none;background:none;padding:0}
+details.ansbox>summary{display:inline-block;cursor:pointer;list-style:none;background:rgba(110,168,255,.14);
+border:1px solid rgba(110,168,255,.42);color:var(--accent);padding:7px 15px;border-radius:9px;font-weight:700;font-size:13.5px}
+details.ansbox>summary::-webkit-details-marker{display:none}
+details.ansbox>summary::marker{content:""}
+details.ansbox>summary:hover{background:rgba(110,168,255,.22)}
+details.ansbox[open]>summary{margin-bottom:10px;background:rgba(84,224,192,.16);border-color:rgba(84,224,192,.42);color:var(--accent2)}
+.ans{background:var(--card2);border:1px solid var(--line);border-left:4px solid var(--accent2);border-radius:10px;padding:12px 16px;color:#dce2f0;font-size:14.5px}
+.ans p:first-child{margin-top:0} .ans p:last-child{margin-bottom:0}
+.expbox{margin-top:8px;border:none;background:none;padding:0}
+.expbox>summary{display:inline-block;cursor:pointer;list-style:none;color:var(--muted);font-size:12.5px;border-bottom:1px dotted var(--muted)}
+.expbox>summary::-webkit-details-marker{display:none}
+.expbox>summary::marker{content:""}
+.exp{margin-top:8px;color:var(--muted);font-size:13.5px;background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.exambar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:rgba(14,17,24,.92);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:14px 0 22px}
+.progpill{font-weight:700;color:var(--accent2);background:rgba(84,224,192,.1);border:1px solid rgba(84,224,192,.3);padding:6px 12px;border-radius:20px;font-size:13.5px}
+.xbtn{cursor:pointer;background:var(--accent);color:#08111f;border:none;border-radius:9px;padding:9px 14px;font-weight:700;font-size:13.5px;display:inline-block}
+.xbtn.ghost{background:var(--card2);color:var(--ink);border:1px solid var(--line)}
+.ansinput{width:100%;margin-top:10px;background:#0b0e16;border:1px solid var(--line);border-radius:9px;color:var(--ink);padding:10px 12px;font-family:inherit;font-size:14px;resize:vertical}
+.ansinput:focus{outline:none;border-color:var(--accent)}
+</style></head><body><div class="wrap"><div class="top"><a href="../index.html">&larr; All topics</a><span class="cat">OS Memory &amp; Systems</span></div>
+<h1><span class="numbadge">27</span> &nbsp;Demand Paging, Page Faults &amp; Swapping</h1>
+<p class="summary">Load pages lazily; overflow cold pages to disk.</p>
+<div class="card keypoints"><h2>Must-remember points</h2><ul><li><strong>Demand paging</strong>: don't load the whole program up front — load each page only on first use.</li><li>Touching a not-present page raises a <strong>page fault</strong>: the OS grabs a free frame, loads the page from disk, updates the table, restarts the instruction — invisibly.</li><li>A page fault is expensive (disk ~1000× slower than RAM) but paid <strong>once per page</strong>, then amortized over many fast reuses (locality of reference).</li><li><strong>Swapping</strong>: when RAM is full, evict a cold page to disk (swap) to free a frame — this lets a program use more memory than physical RAM (virtual memory).</li><li>Working set &gt; RAM → constant faults = <strong>thrashing</strong> (severe slowdown).</li></ul></div>
+<h2>Minor vs major fault</h2><p>Minor = page already in RAM (cache/shared/zero-fill) → just fix the mapping (cheap). Major = must read from disk (expensive).</p>
+<div class="card confuse"><h2>&#9888; Easily confused</h2><div class="pair"><div class="vs">demand paging vs swapping</div><div class="d">Demand paging = load pages in on first use. Swapping = push cold pages out to disk when RAM is full. Two directions of the same virtual-memory system.</div></div><div class="pair"><div class="vs">minor vs major page fault</div><div class="d">Minor = no disk I/O (page already resident). Major = disk read required.</div></div><div class="pair"><div class="vs">page fault vs segfault</div><div class="d">A page fault is normal (OS loads a page). A segmentation fault is an illegal access the OS refuses — different thing.</div></div></div>
+<div class="card testcta"><h2 style="margin-top:0">Test yourself</h2><p>6 single-focus questions on this topic (answer hidden behind its own button).</p><a class="bigbtn" href="../questions/master-question-sheet.html#demand-paging-and-swapping">Go to Demand Paging, Page Faults &amp; Swapping questions &rarr;</a></div>
+<div class="nav"><a href="26-memory-allocation-and-fragmentation.html">&larr; 26 Allocation Methods &amp; Fragmentation</a><a class="next" href="28-linux-filesystem-navigation.html">28 Filesystem &amp; Navigation &rarr;</a></div>
+<footer>Anup &middot; C++/Linux/Systems study &middot; reference page</footer></div></body></html>

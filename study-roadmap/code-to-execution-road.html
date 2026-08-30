@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Written Code to Execution — The Road Through Memory</title>
+<style>
+  :root{
+    --bg:#0f1220; --bg2:#161a2e; --card:#1c2138; --card2:#222846;
+    --ink:#e9ecf6; --muted:#a6adc8; --line:#2c3358;
+    --accent:#7aa2ff; --accent2:#5be6c4; --warn:#ffd166; --danger:#ff7b8a;
+    --page:#7aa2ff; --frame:#5be6c4; --gold:#ffd166;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:linear-gradient(180deg,#0d1020,#12162a 40%,#0d1020);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6; font-size:16px;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:0 20px 100px}
+
+  header.hero{
+    text-align:center; padding:70px 20px 30px;
+    background:radial-gradient(1200px 400px at 50% -10%, rgba(122,162,255,.18), transparent 60%);
+  }
+  .hero .eyebrow{letter-spacing:.28em; text-transform:uppercase; color:var(--accent2); font-size:12px; font-weight:700}
+  .hero h1{font-size:40px; line-height:1.15; margin:14px 0 10px; font-weight:800}
+  .hero h1 span{background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .hero p{color:var(--muted); max-width:640px; margin:0 auto; font-size:17px}
+  .hero .by{margin-top:18px; font-size:13px; color:var(--muted)}
+  .hero .by b{color:var(--ink)}
+
+  .legend{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:26px 0 0}
+  .chip{display:inline-flex; align-items:center; gap:8px; background:var(--card); border:1px solid var(--line); padding:8px 14px; border-radius:999px; font-size:13px}
+  .dot{width:11px; height:11px; border-radius:50%}
+  .dot.page{background:var(--page)} .dot.frame{background:var(--frame)} .dot.disk{background:var(--gold)}
+
+  /* Figures */
+  .figure{background:var(--card2); border:1px solid var(--line); border-radius:14px; padding:18px 18px 12px; margin:18px 0}
+  .figure svg{width:100%; height:auto; display:block}
+  .figtitle{font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent2); font-weight:700; margin:0 0 10px}
+  .figcap{color:var(--muted); font-size:13.5px; text-align:center; margin:10px 6px 2px}
+
+  .featured{background:linear-gradient(135deg,#1a2140,#141830); border:1px solid var(--line); border-radius:18px; padding:26px; margin:34px 0 10px; box-shadow:0 16px 40px rgba(0,0,0,.3)}
+  .featured h2{margin:0 0 4px; font-size:24px}
+  .featured .kicker{color:var(--accent2); font-weight:700; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase}
+
+  /* Road */
+  .road{position:relative; margin-top:40px}
+  .road::before{content:""; position:absolute; left:29px; top:10px; bottom:40px; width:4px; background:linear-gradient(180deg,var(--accent),var(--accent2)); border-radius:4px; opacity:.5}
+  .station{position:relative; padding:0 0 34px 74px; margin-bottom:6px}
+  .station .num{position:absolute; left:8px; top:0; width:44px; height:44px; border-radius:50%; background:var(--card2); border:3px solid var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; z-index:2; box-shadow:0 0 0 6px rgba(122,162,255,.10)}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px 24px; box-shadow:0 12px 30px rgba(0,0,0,.28)}
+  .card h2{margin:0 0 4px; font-size:22px}
+  .card .kicker{color:var(--accent2); font-weight:700; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase}
+  .card p{margin:12px 0; color:#dfe3f2}
+  .card p.muted{color:var(--muted)}
+
+  .asked{border-left:4px solid var(--warn); background:rgba(255,209,102,.08); padding:12px 16px; border-radius:10px; margin:14px 0; font-size:15px}
+  .asked b{color:var(--warn)}
+  .key{border-left:4px solid var(--accent2); background:rgba(91,230,196,.08); padding:12px 16px; border-radius:10px; margin:14px 0}
+  .key b{color:var(--accent2)}
+  .analogy{border-left:4px solid var(--accent); background:rgba(122,162,255,.08); padding:12px 16px; border-radius:10px; margin:14px 0}
+  .analogy b{color:var(--accent)}
+
+  pre{background:#0b0e1c; border:1px solid var(--line); border-radius:12px; padding:16px 18px; overflow:auto; font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace; font-size:13.5px; color:#cdd6f4; line-height:1.5}
+  .cmp{color:var(--frame)} .virt{color:var(--page)} .warnx{color:var(--warn)}
+
+  .vs{width:100%; border-collapse:collapse; margin:8px 0; font-size:14.5px}
+  .vs th,.vs td{border:1px solid var(--line); padding:11px 13px; text-align:left; vertical-align:top}
+  .vs th{background:var(--card2); color:var(--ink)}
+  .vs td:first-child{color:var(--muted); width:34%; font-weight:600}
+
+  .cheat{background:linear-gradient(135deg,#1a1f38,#141830); border:1px solid var(--line); border-radius:18px; padding:26px; margin-top:40px}
+  .cheat h2{margin-top:0}
+  .cheat dl{display:grid; grid-template-columns:auto 1fr; gap:8px 18px; margin:0}
+  .cheat dt{font-weight:800; color:var(--accent2); font-family:monospace}
+  .cheat dd{margin:0; color:#dfe3f2}
+
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0}
+  @media(max-width:640px){ .split{grid-template-columns:1fr} .hero h1{font-size:30px} }
+  .box{background:var(--card2); border:1px solid var(--line); border-radius:12px; padding:14px}
+  .box h4{margin:0 0 8px; font-size:13px; letter-spacing:.05em; text-transform:uppercase; color:var(--muted)}
+  .rowm{display:flex; align-items:center; gap:10px; padding:7px 10px; border-radius:8px; margin:6px 0; font-size:13.5px; font-family:monospace}
+  .rowm.page{background:rgba(122,162,255,.14); border:1px solid rgba(122,162,255,.35)}
+  .rowm.frame{background:rgba(91,230,196,.12); border:1px solid rgba(91,230,196,.32)}
+
+  .recap{margin-top:36px; text-align:center; background:radial-gradient(600px 200px at 50% 0%, rgba(91,230,196,.14), transparent); padding:30px 20px; border-radius:18px; border:1px solid var(--line)}
+  .recap h2{font-size:22px; margin:0 0 12px}
+  .recap p{font-size:17px; color:#eef1fb; max-width:740px; margin:0 auto}
+  footer{text-align:center; color:var(--muted); font-size:13px; margin-top:50px}
+  .pill{display:inline-block; background:var(--card2); border:1px solid var(--line); padding:2px 9px; border-radius:6px; font-family:monospace; font-size:13px; color:var(--accent2)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Systems &middot; Memory &middot; C / C++</div>
+  <h1>From Written Code<br>to <span>Execution on the Machine</span></h1>
+  <p>The complete road — how a line of code becomes something the CPU runs, and how memory (pages, frames, the page table) makes it all fit. Now with diagrams.</p>
+  <div class="by">Built from <b>Anup's</b> own questions on paging &mdash; bundled, illustrated, and completed end-to-end.</div>
+
+  <div class="legend">
+    <span class="chip"><span class="dot disk"></span> On Disk</span>
+    <span class="chip"><span class="dot page"></span> Page &mdash; a chunk of your program</span>
+    <span class="chip"><span class="dot frame"></span> Frame &mdash; a slot in physical RAM</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ===== FEATURED BIG PICTURE ===== -->
+  <div class="featured">
+    <div class="kicker">See it all at once</div>
+    <h2>The big picture: virtual → physical</h2>
+    <p class="muted" style="margin:8px 0 4px">Your program looks tidy and ordered (left). Real RAM is a scattered shared mess (right). The <b>page table</b> connects them — that's the whole trick.</p>
+    <div class="figure">
+      <svg viewBox="0 0 820 480" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+        <!-- titles -->
+        <text x="125" y="40" fill="#7aa2ff" font-size="15" font-weight="700" text-anchor="middle">VIRTUAL SPACE</text>
+        <text x="125" y="58" fill="#a6adc8" font-size="12" text-anchor="middle">what the program sees · imaginary · ordered</text>
+        <text x="695" y="40" fill="#5be6c4" font-size="15" font-weight="700" text-anchor="middle">PHYSICAL RAM</text>
+        <text x="695" y="58" fill="#a6adc8" font-size="12" text-anchor="middle">the real bytes · shared · scattered</text>
+
+        <!-- connector lines (page table) -->
+        <g stroke="#7aa2ff" stroke-width="2" opacity="0.4">
+          <line x1="210" y1="115" x2="625" y2="261"/>
+          <line x1="210" y1="170" x2="625" y2="101"/>
+          <line x1="210" y1="225" x2="625" y2="381"/>
+          <line x1="210" y1="280" x2="625" y2="181"/>
+          <line x1="210" y1="335" x2="625" y2="421"/>
+          <line x1="210" y1="390" x2="625" y2="301"/>
+        </g>
+        <text x="417" y="250" fill="#c9d2f5" font-size="12" text-anchor="middle" transform="rotate(-4 417 250)">page table maps</text>
+        <text x="417" y="266" fill="#c9d2f5" font-size="12" text-anchor="middle" transform="rotate(-4 417 266)">page → frame</text>
+
+        <!-- left panel -->
+        <rect x="40" y="70" width="170" height="380" rx="12" fill="#181d33" stroke="#2c3358"/>
+        <!-- pages -->
+        <g font-size="14" font-weight="600" text-anchor="middle">
+          <rect x="55" y="90"  width="140" height="50" rx="8" fill="#24305e" stroke="#7aa2ff" stroke-width="2"/><text x="125" y="120" fill="#cdd8ff">Page 0</text>
+          <rect x="55" y="145" width="140" height="50" rx="8" fill="#24305e" stroke="#7aa2ff" stroke-width="2"/><text x="125" y="175" fill="#cdd8ff">Page 1</text>
+          <rect x="55" y="200" width="140" height="50" rx="8" fill="#24305e" stroke="#7aa2ff" stroke-width="2"/><text x="125" y="230" fill="#cdd8ff">Page 2</text>
+          <rect x="55" y="255" width="140" height="50" rx="8" fill="#24305e" stroke="#7aa2ff" stroke-width="2"/><text x="125" y="285" fill="#cdd8ff">Page 3</text>
+          <rect x="55" y="310" width="140" height="50" rx="8" fill="#24305e" stroke="#7aa2ff" stroke-width="2"/><text x="125" y="340" fill="#cdd8ff">Page 4</text>
+          <rect x="55" y="365" width="140" height="50" rx="8" fill="#24305e" stroke="#7aa2ff" stroke-width="2"/><text x="125" y="395" fill="#cdd8ff">Page 5</text>
+        </g>
+
+        <!-- right panel -->
+        <rect x="610" y="70" width="170" height="380" rx="12" fill="#181d33" stroke="#2c3358"/>
+        <g font-size="12.5" text-anchor="middle">
+          <rect x="625" y="82"  width="140" height="38" rx="7" fill="#24305e" stroke="#5be6c4" stroke-width="2"/><text x="695" y="106" fill="#bcd0ff">F0 → Page 1</text>
+          <rect x="625" y="122" width="140" height="38" rx="7" fill="#2a2f45" stroke="#5a6180"/><text x="695" y="146" fill="#9aa2bf">F1 · other proc</text>
+          <rect x="625" y="162" width="140" height="38" rx="7" fill="#24305e" stroke="#5be6c4" stroke-width="2"/><text x="695" y="186" fill="#bcd0ff">F2 → Page 3</text>
+          <rect x="625" y="202" width="140" height="38" rx="7" fill="none" stroke="#4a5178" stroke-dasharray="5 4"/><text x="695" y="226" fill="#6b7394">F3 · free</text>
+          <rect x="625" y="242" width="140" height="38" rx="7" fill="#24305e" stroke="#5be6c4" stroke-width="2"/><text x="695" y="266" fill="#bcd0ff">F4 → Page 0</text>
+          <rect x="625" y="282" width="140" height="38" rx="7" fill="#24305e" stroke="#5be6c4" stroke-width="2"/><text x="695" y="306" fill="#bcd0ff">F5 → Page 5</text>
+          <rect x="625" y="322" width="140" height="38" rx="7" fill="#2a2f45" stroke="#5a6180"/><text x="695" y="346" fill="#9aa2bf">F6 · kernel</text>
+          <rect x="625" y="362" width="140" height="38" rx="7" fill="#24305e" stroke="#5be6c4" stroke-width="2"/><text x="695" y="386" fill="#bcd0ff">F7 → Page 2</text>
+          <rect x="625" y="402" width="140" height="38" rx="7" fill="#24305e" stroke="#5be6c4" stroke-width="2"/><text x="695" y="426" fill="#bcd0ff">F8 → Page 4</text>
+        </g>
+      </svg>
+      <div class="figcap">Left: your 6 pages in perfect order. Right: those same pages land in scattered frames (F4, F0, F7, F2, F8, F5) — mixed in with other processes, the kernel, and free slots. The crossing lines are the page table doing its job.</div>
+    </div>
+  </div>
+
+<div class="road">
+
+  <!-- 1 -->
+  <div class="station">
+    <div class="num">1</div>
+    <div class="card">
+      <div class="kicker">The starting line</div>
+      <h2>You write the source code</h2>
+      <p>It begins as plain text in a <span class="pill">.cpp</span> file on your <b>disk</b>. The CPU cannot run text — it has no idea what <code>int main()</code> means yet.</p>
+      <pre><span class="warnx">// main.cpp  — just text on disk</span>
+int main() {
+    int x = 42;
+    return 0;
+}</pre>
+      <p class="muted">Nothing in RAM. Nothing running. Raw material.</p>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="station">
+    <div class="num">2</div>
+    <div class="card">
+      <div class="kicker">Turning text into a machine</div>
+      <h2>Compile &amp; link → an executable</h2>
+      <p>The <b>compiler</b> turns each source file into machine-code <b>object files</b>. The <b>linker</b> stitches them together (plus libraries) into one <b>executable binary</b>.</p>
+      <pre>main.cpp ──▶ <span class="cmp">compiler</span> ──▶ main.o ┐
+util.cpp ──▶ <span class="cmp">compiler</span> ──▶ util.o ┤──▶ <span class="cmp">linker</span> ──▶ ./program  (binary on disk)
+                          libc, libstdc++ ┘</pre>
+      <p class="muted">Still a file on <b>disk</b> — but now it's CPU-runnable instructions. (The compiler/linker part of your Cherno track is the on-ramp to this road.)</p>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="station">
+    <div class="num">3</div>
+    <div class="card">
+      <div class="kicker">Press run</div>
+      <h2>The OS creates a process + virtual space</h2>
+      <p>The OS creates a <b>process</b> and hands it a private <b>virtual address space</b> — a made-up range of addresses only this program can see.</p>
+      <div class="asked"><b>You asked:</b> “Is virtual address space a non-living, imaginary thing? Does it hold RAM?”</div>
+      <p><b>Yes — it's imaginary, and no — it does not hold RAM.</b> It stores nothing itself. It's just a set of <b>address numbers</b> (labels) the program is allowed to use — like house numbers on a street with no houses built yet. The real bytes live in RAM frames; the page table translates a virtual number into the real RAM spot.</p>
+      <div class="figure">
+        <div class="figtitle">Virtual space = labels · RAM = the actual storage</div>
+        <svg viewBox="0 0 720 210" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+          <text x="150" y="26" fill="#7aa2ff" font-size="13.5" font-weight="700" text-anchor="middle">VIRTUAL addresses (just numbers)</text>
+          <text x="580" y="26" fill="#5be6c4" font-size="13.5" font-weight="700" text-anchor="middle">PHYSICAL RAM (real bytes)</text>
+          <!-- ghost labels -->
+          <g font-family="monospace" font-size="13" text-anchor="middle">
+            <rect x="60" y="45"  width="180" height="34" rx="8" fill="none" stroke="#4a5178" stroke-dasharray="5 4"/><text x="150" y="67" fill="#8f98bd">0x0000  (empty label)</text>
+            <rect x="60" y="90"  width="180" height="34" rx="8" fill="none" stroke="#4a5178" stroke-dasharray="5 4"/><text x="150" y="112" fill="#8f98bd">0x1000  (empty label)</text>
+            <rect x="60" y="135" width="180" height="34" rx="8" fill="none" stroke="#4a5178" stroke-dasharray="5 4"/><text x="150" y="157" fill="#8f98bd">0x2000  (empty label)</text>
+          </g>
+          <!-- arrows -->
+          <g stroke="#7aa2ff" stroke-width="2" fill="none" marker-end="url(#ah)">
+            <line x1="245" y1="62"  x2="475" y2="62"/>
+            <line x1="245" y1="107" x2="475" y2="107"/>
+            <line x1="245" y1="152" x2="475" y2="152"/>
+          </g>
+          <defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#7aa2ff"/></marker></defs>
+          <!-- real frames -->
+          <g font-family="monospace" font-size="13" text-anchor="middle">
+            <rect x="480" y="45"  width="180" height="34" rx="8" fill="#24305e" stroke="#5be6c4" stroke-width="2"/><text x="570" y="67" fill="#bcd0ff">Frame 7  ← real bytes</text>
+            <rect x="480" y="90"  width="180" height="34" rx="8" fill="#24305e" stroke="#5be6c4" stroke-width="2"/><text x="570" y="112" fill="#bcd0ff">Frame 2  ← real bytes</text>
+            <rect x="480" y="135" width="180" height="34" rx="8" fill="#24305e" stroke="#5be6c4" stroke-width="2"/><text x="570" y="157" fill="#bcd0ff">Frame 9  ← real bytes</text>
+          </g>
+          <text x="360" y="195" fill="#a6adc8" font-size="12.5" text-anchor="middle">The dashed labels hold nothing. Follow the arrow (page table) to reach the real storage.</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="station">
+    <div class="num">4</div>
+    <div class="card">
+      <div class="kicker">The shape of your program</div>
+      <h2>The memory layout (virtual)</h2>
+      <p>Inside that virtual space, your program is arranged into the regions you know. This tidy picture is the <b>virtual</b> layout — how it looks to the program:</p>
+      <pre>high address  ┌──────────────┐
+              │    Stack     │  ↓ grows down  — locals, function calls
+              │      ⋮       │
+              │     Heap     │  ↑ grows up    — new / malloc
+              │  BSS / Data  │                — globals &amp; statics
+low  address  │  Text (code) │                — your instructions
+              └──────────────┘</pre>
+      <p>Every region is made of <b>pages</b>. Remember: <b>this whole neat layout is virtual — the real bytes are scattered across RAM.</b></p>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="station">
+    <div class="num">5</div>
+    <div class="card">
+      <div class="kicker">The core idea</div>
+      <h2>Why divide the program into pages?</h2>
+      <div class="asked"><b>You asked:</b> “Why does the process need to be divided into pages at first?”</div>
+      <p>So it <b>doesn't need one big contiguous block of RAM.</b> Chop the program into equal-size <b>pages</b>, and each page goes into <i>any</i> free slot, anywhere.</p>
+      <div class="analogy"><b>Parking lot:</b> without paging your program is one long bus needing many spots <i>in a row</i>. Paging cuts it into equal cars; each parks in any free spot. Suddenly it fits.</div>
+      <p>Bonuses unlocked: <b>virtual memory</b> (run programs bigger than RAM), <b>isolation &amp; protection</b>, and <b>sharing</b> (one library copy used by many programs).</p>
+    </div>
+  </div>
+
+  <!-- 5b external frag -->
+  <div class="station">
+    <div class="num">★</div>
+    <div class="card">
+      <div class="kicker">The problem paging kills</div>
+      <h2>External fragmentation</h2>
+      <div class="asked"><b>You asked:</b> “What is external fragmentation — and why ‘external’, not ‘internal’? Is it a method like paging?”</div>
+      <p>It's wasted RAM you get <b>without</b> paging. Programs load and quit, leaving scattered holes. Total free can be big, yet no single hole is large enough for a contiguous request.</p>
+
+      <div class="figure">
+        <div class="figtitle">Why the names: where the waste sits</div>
+        <svg viewBox="0 0 720 240" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+          <!-- external -->
+          <text x="20" y="30" fill="#ff7b8a" font-size="14" font-weight="700">EXTERNAL — waste BETWEEN blocks</text>
+          <g>
+            <rect x="20"  y="45" width="90"  height="46" rx="6" fill="#24305e" stroke="#7aa2ff"/><text x="65"  y="73" fill="#cdd8ff" font-size="13" text-anchor="middle">P1</text>
+            <rect x="110" y="45" width="60"  height="46" rx="6" fill="#ff7b8a" opacity="0.28"/><text x="140" y="73" fill="#ffb3bc" font-size="11" text-anchor="middle">gap</text>
+            <rect x="170" y="45" width="110" height="46" rx="6" fill="#24305e" stroke="#7aa2ff"/><text x="225" y="73" fill="#cdd8ff" font-size="13" text-anchor="middle">P2</text>
+            <rect x="280" y="45" width="80"  height="46" rx="6" fill="#ff7b8a" opacity="0.28"/><text x="320" y="73" fill="#ffb3bc" font-size="11" text-anchor="middle">gap</text>
+            <rect x="360" y="45" width="120" height="46" rx="6" fill="#24305e" stroke="#7aa2ff"/><text x="420" y="73" fill="#cdd8ff" font-size="13" text-anchor="middle">P3</text>
+            <rect x="480" y="45" width="120" height="46" rx="6" fill="#ff7b8a" opacity="0.28"/><text x="540" y="73" fill="#ffb3bc" font-size="11" text-anchor="middle">gap</text>
+          </g>
+          <text x="20" y="118" fill="#a6adc8" font-size="12.5">Free space exists, but it's scattered in the gaps → a big contiguous request can't fit. Waste is <tspan fill="#ff7b8a">outside</tspan> the blocks.</text>
+
+          <!-- internal -->
+          <text x="20" y="160" fill="#ffd166" font-size="14" font-weight="700">INTERNAL — waste INSIDE the last block</text>
+          <rect x="20" y="175" width="220" height="46" rx="6" fill="none" stroke="#5be6c4" stroke-width="2"/>
+          <text x="130" y="169" fill="#5be6c4" font-size="11" text-anchor="middle">one frame (4 KB)</text>
+          <rect x="24" y="179" width="150" height="38" rx="4" fill="#24305e"/><text x="99" y="203" fill="#cdd8ff" font-size="12" text-anchor="middle">used (3 KB)</text>
+          <rect x="176" y="179" width="60" height="38" rx="4" fill="#ffd166" opacity="0.35"/><text x="206" y="203" fill="#ffe08a" font-size="10" text-anchor="middle">wasted</text>
+          <text x="260" y="203" fill="#a6adc8" font-size="12.5">Waste is <tspan fill="#ffd166">inside</tspan> an allocated frame — the leftover of the last page.</text>
+        </svg>
+      </div>
+
+      <div class="key"><b>Paging's fix:</b> drop the “contiguous” rule. Cut the request into pages; each page fills a scattered hole. External fragmentation gone. ✅</div>
+
+      <p style="margin-top:16px"><b>Is external fragmentation a method like paging? No — it's a problem, not a technique.</b> You never choose “external fragmentation vs paging.” The old <b>contiguous-allocation</b> method <i>suffers</i> from it; <b>paging is the method that cures it.</b></p>
+
+      <div class="figure">
+        <div class="figtitle">Methods you choose · vs · Problems that happen</div>
+        <svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+          <text x="150" y="26" fill="#7aa2ff" font-size="13.5" font-weight="700" text-anchor="middle">METHODS (you choose)</text>
+          <text x="560" y="26" fill="#ff7b8a" font-size="13.5" font-weight="700" text-anchor="middle">PROBLEMS (side effects)</text>
+
+          <rect x="40" y="45"  width="220" height="46" rx="9" fill="#181d33" stroke="#5a6180"/><text x="150" y="73" fill="#cdd8ff" font-size="13.5" text-anchor="middle">Contiguous allocation</text>
+          <rect x="40" y="105" width="220" height="46" rx="9" fill="#24305e" stroke="#5be6c4" stroke-width="2"/><text x="150" y="133" fill="#bff3e5" font-size="13.5" text-anchor="middle" font-weight="700">Paging</text>
+          <rect x="40" y="165" width="220" height="46" rx="9" fill="#181d33" stroke="#5a6180"/><text x="150" y="193" fill="#cdd8ff" font-size="13.5" text-anchor="middle">Segmentation</text>
+
+          <rect x="470" y="55"  width="210" height="46" rx="9" fill="#3a1f28" stroke="#ff7b8a"/><text x="575" y="83" fill="#ffb3bc" font-size="13" text-anchor="middle">External fragmentation</text>
+          <rect x="470" y="150" width="210" height="46" rx="9" fill="#3a331f" stroke="#ffd166"/><text x="575" y="178" fill="#ffe08a" font-size="13" text-anchor="middle">Internal fragmentation</text>
+
+          <defs>
+            <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#ff7b8a"/></marker>
+            <marker id="ag" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#5be6c4"/></marker>
+          </defs>
+          <!-- contiguous suffers external -->
+          <path d="M260 68 C 360 68, 380 78, 470 78" stroke="#ff7b8a" stroke-width="2" fill="none" marker-end="url(#ar)"/>
+          <text x="360" y="60" fill="#ff9aa6" font-size="11.5" text-anchor="middle">suffers</text>
+          <!-- paging avoids external (struck) -->
+          <path d="M260 122 C 360 122, 380 90, 470 88" stroke="#5be6c4" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#ag)"/>
+          <text x="372" y="112" fill="#7fe9cf" font-size="11.5" text-anchor="middle">avoids ✗</text>
+          <!-- paging small internal -->
+          <path d="M260 140 C 360 150, 380 168, 470 170" stroke="#5be6c4" stroke-width="2" fill="none" marker-end="url(#ag)"/>
+          <text x="372" y="176" fill="#7fe9cf" font-size="11.5" text-anchor="middle">has a little</text>
+          <text x="360" y="235" fill="#a6adc8" font-size="12.5" text-anchor="middle">Paging is the cure; external fragmentation is the disease. Not two options you pick between.</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="station">
+    <div class="num">6</div>
+    <div class="card">
+      <div class="kicker">Two words, two roles</div>
+      <h2>Pages vs Frames — one ball, one box</h2>
+      <div class="asked"><b>You asked:</b> “Is a page in a frame like many small balls in one box, or one big ball in one box?”</div>
+      <p><b>One big ball that fills the box exactly.</b> Page size = frame size, so <b>one page completely fills one frame</b> — never many pages in a frame, never one page across two frames. Strictly one-to-one.</p>
+      <div class="figure">
+        <div class="figtitle">One page fills one frame — exactly</div>
+        <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+          <!-- correct -->
+          <rect x="40" y="40" width="230" height="150" rx="12" fill="#181d33" stroke="#5be6c4" stroke-width="2.5"/>
+          <text x="155" y="30" fill="#5be6c4" font-size="13" text-anchor="middle" font-weight="700">Frame (4 KB slot)</text>
+          <circle cx="155" cy="115" r="62" fill="#24305e" stroke="#7aa2ff" stroke-width="2.5"/>
+          <text x="155" y="110" fill="#cdd8ff" font-size="14" text-anchor="middle" font-weight="700">ONE page</text>
+          <text x="155" y="130" fill="#9fb2e8" font-size="12" text-anchor="middle">fills it exactly</text>
+          <text x="155" y="210" fill="#7fe9cf" font-size="15" text-anchor="middle" font-weight="700">✓ correct</text>
+
+          <!-- wrong -->
+          <rect x="430" y="40" width="230" height="150" rx="12" fill="#181d33" stroke="#5a6180" stroke-width="2"/>
+          <text x="545" y="30" fill="#a6adc8" font-size="13" text-anchor="middle" font-weight="700">Frame</text>
+          <g fill="#3a3f57" stroke="#6b7394">
+            <circle cx="480" cy="80" r="18"/><circle cx="540" cy="75" r="18"/><circle cx="600" cy="85" r="18"/>
+            <circle cx="500" cy="135" r="18"/><circle cx="565" cy="140" r="18"/><circle cx="615" cy="130" r="18"/>
+          </g>
+          <text x="545" y="210" fill="#ff7b8a" font-size="15" text-anchor="middle" font-weight="700">✗ not many small pages</text>
+        </svg>
+      </div>
+      <div class="key"><b>The rule:</b> a page's bytes are stored <i>inside</i> a frame, and <b>one frame holds exactly one page.</b> So a code page, a stack page, and each heap page all sit in <b>different frames.</b></div>
+
+      <p style="margin-top:16px"><b>Can 2 KB of stack + 2 KB of heap share one page in one frame?</b></p>
+      <div class="asked"><b>You asked:</b> exactly this. Answer: <b>normally no.</b></div>
+      <p>Even though 2 + 2 = 4 KB (one page's worth), <b>stack and heap are not next to each other.</b> Stack sits at the top of the address space, heap near the bottom, with a huge gap between. A page only ever holds bytes from <b>one continuous stretch</b> of virtual addresses — and stack &amp; heap aren't continuous. So each gets its own page → its own frame. Minimum: <b>2 pages, 2 frames.</b></p>
+      <div class="figure">
+        <div class="figtitle">Different regions can't share a page</div>
+        <svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+          <text x="130" y="26" fill="#a6adc8" font-size="12.5" text-anchor="middle">virtual layout (far apart)</text>
+          <rect x="60" y="40" width="140" height="34" rx="7" fill="#24305e" stroke="#7aa2ff"/><text x="130" y="62" fill="#cdd8ff" font-size="12.5" text-anchor="middle">Stack (high addr)</text>
+          <line x1="130" y1="74" x2="130" y2="108" stroke="#4a5178" stroke-dasharray="4 4"/>
+          <text x="130" y="95" fill="#6b7394" font-size="11" text-anchor="middle">…big gap…</text>
+          <rect x="60" y="108" width="140" height="34" rx="7" fill="#24305e" stroke="#7aa2ff"/><text x="130" y="130" fill="#cdd8ff" font-size="12.5" text-anchor="middle">Heap (low addr)</text>
+
+          <defs><marker id="a2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#5be6c4"/></marker></defs>
+          <line x1="205" y1="57"  x2="440" y2="57"  stroke="#5be6c4" stroke-width="2" marker-end="url(#a2)"/>
+          <line x1="205" y1="125" x2="440" y2="125" stroke="#5be6c4" stroke-width="2" marker-end="url(#a2)"/>
+          <rect x="445" y="40"  width="200" height="34" rx="7" fill="#24305e" stroke="#5be6c4" stroke-width="2"/><text x="545" y="62"  fill="#bcd0ff" font-size="12.5" text-anchor="middle">its own frame (e.g. F12)</text>
+          <rect x="445" y="108" width="200" height="34" rx="7" fill="#24305e" stroke="#5be6c4" stroke-width="2"/><text x="545" y="130" fill="#bcd0ff" font-size="12.5" text-anchor="middle">its own frame (e.g. F3)</text>
+          <text x="350" y="172" fill="#a6adc8" font-size="12" text-anchor="middle">Two things from the SAME region, sitting side by side, CAN share a page. Different regions cannot.</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="station">
+    <div class="num">7</div>
+    <div class="card">
+      <div class="kicker">The glue</div>
+      <h2>The page table — the connector</h2>
+      <div class="asked"><b>You asked:</b> “If the pages are scattered, how are they connected?”</div>
+      <p>By the <b>page table</b> — a per-process list mapping <i>program's page → real frame.</i> Pages are connected <b>through this table</b>, not through location (see the big-picture diagram at the top).</p>
+      <div class="analogy"><b>Hotel front desk:</b> you ask for “page 3,” don't know the room. The desk (page table) checks the list: “page 3 → room 47.” The connection is the list, not the layout.</div>
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="station">
+    <div class="num">8</div>
+    <div class="card">
+      <div class="kicker">How a lookup happens</div>
+      <h2>Address translation: page number + offset</h2>
+      <p>When your program touches an address, the CPU's <b>MMU</b> splits it in two:</p>
+      <pre>   Virtual address  =  [ <span class="virt">page number</span> | <span class="cmp">offset</span> ]
+                            │             │
+                       which page    how far into it</pre>
+      <p><b>Step 1:</b> page number → page table → frame number. &nbsp;<b>Step 2:</b> frame number + offset → real physical address.</p>
+      <pre><span class="warnx">Example — 4 KB pages, program reads virtual address 12,290:</span>
+  12,290 ÷ 4096  =  page <span class="virt">3</span>, remainder <span class="cmp">2</span>   (offset)
+  page table:  page 3  →  frame <span class="cmp">47</span>
+  physical address  =  start of frame 47  +  2   ✅</pre>
+      <div class="key"><b>The magic:</b> program walks pages in order (contiguous, virtual); hardware redirects each to its real frame. Non-contiguous in RAM, contiguous to the program.</div>
+      <p class="muted"><b>Speed note (TLB):</b> the CPU caches recent page→frame translations in the <b>TLB</b>, so most accesses skip the table lookup entirely.</p>
+    </div>
+  </div>
+
+  <!-- 9 -->
+  <div class="station">
+    <div class="num">9</div>
+    <div class="card">
+      <div class="kicker">Loading — lazily</div>
+      <h2>Demand paging (frames on first touch)</h2>
+      <p>The OS loads pages <b>on demand</b> — only when used. Touch a page that isn't in RAM → <b>page fault</b> → OS grabs a free frame, loads the bytes from disk, updates the table, resumes you — invisibly.</p>
+      <div class="key"><b>For your heap:</b> when you <code>new</code>/<code>malloc</code> 30 KB, physical frames are often handed out only as you <i>write</i> to each page. No RAM burned on untouched memory.</div>
+    </div>
+  </div>
+
+  <!-- 10 -->
+  <div class="station">
+    <div class="num">10</div>
+    <div class="card">
+      <div class="kicker">When RAM fills up</div>
+      <h2>Swapping &amp; virtual memory</h2>
+      <p>RAM full and a new page needed? The OS evicts a cold page to <b>disk (swap)</b>, freeing its frame. If that page is needed again later, a page fault brings it back.</p>
+      <pre>RAM full ──▶ evict cold page ──▶ <span class="warnx">disk (swap)</span> ──▶ frame free ──▶ load needed page</pre>
+      <div class="key"><b>This is “virtual memory”:</b> why a program can use more memory than you physically have. Too much swapping = “thrashing” (disk is far slower).</div>
+    </div>
+  </div>
+
+  <!-- 11 -->
+  <div class="station">
+    <div class="num">11</div>
+    <div class="card">
+      <div class="kicker">You're not alone in RAM</div>
+      <h2>What else lives in frames</h2>
+      <div class="asked"><b>You asked:</b> “What else can sit in other frames, beyond my program's layout?”</div>
+      <p>Your pages are one tenant. Frames hold <b>everything the machine is doing</b> — see the mix on the right side of the big-picture diagram: other processes' pages, the OS <b>kernel</b>, the <b>page tables</b> themselves, <b>shared libraries</b> (one libc for many programs), the <b>page cache</b> (files cached from disk), <b>I/O / DMA buffers</b>, and <b>free frames</b> waiting to be handed out.</p>
+      <div class="analogy"><b>Apartment building:</b> RAM is the building; your program is one tenant. The page table keeps every tenant's things private and findable.</div>
+    </div>
+  </div>
+
+  <!-- 12 -->
+  <div class="station">
+    <div class="num">12</div>
+    <div class="card">
+      <div class="kicker">The finish line</div>
+      <h2>The CPU executes</h2>
+      <p>The CPU repeats <b>fetch → decode → execute</b>: ask for the next instruction by <i>virtual</i> address → MMU (via TLB / page table) translates to a <i>frame</i> → bytes fetched from RAM → instruction runs. Every access goes through the same translation.</p>
+      <div class="key"><b>Full circle:</b> the neat layout is <b>virtual</b> (pages, ordered); the real bytes live in <b>frames</b> (physical, scattered); the page table connects the two — a clean private machine on top of a shared messy RAM.</div>
+    </div>
+  </div>
+
+</div><!-- /road -->
+
+<!-- Worked example -->
+<div class="cheat">
+  <h2>🧮 Worked example — your 30 KB heap</h2>
+  <p style="color:#dfe3f2">With <b>10 KB</b> pages (easy math):</p>
+  <div class="split">
+    <div class="box">
+      <h4 style="color:var(--page)">In pages (virtual)</h4>
+      <div class="rowm page">Heap page 0 &nbsp;(0–10 KB)</div>
+      <div class="rowm page">Heap page 1 &nbsp;(10–20 KB)</div>
+      <div class="rowm page">Heap page 2 &nbsp;(20–30 KB)</div>
+    </div>
+    <div class="box">
+      <h4 style="color:var(--frame)">In frames (physical RAM)</h4>
+      <div class="rowm frame">Frame 3&nbsp; ← Heap page 0</div>
+      <div class="rowm frame">Frame 41 ← Heap page 1</div>
+      <div class="rowm frame">Frame 9&nbsp; ← Heap page 2</div>
+    </div>
+  </div>
+  <p style="color:#dfe3f2; margin-bottom:0">30 KB heap → <b>3 pages</b> → each backed by a <b>frame</b>, scattered, connected by the page table. Program still sees one clean 30 KB heap. <span style="color:var(--muted)">(Real pages are usually 4 KB, so 30 KB ≈ 8 pages/frames — same idea. With demand paging, a frame is handed out only on first write to that page.)</span></p>
+</div>
+
+<!-- Cheat sheet -->
+<div class="cheat">
+  <h2>📎 One-line cheat sheet</h2>
+  <dl>
+    <dt>Virtual space</dt><dd>Imaginary range of address numbers; stores nothing. It does NOT hold RAM — it points to it.</dd>
+    <dt>Page</dt><dd>An equal-size chunk of that virtual space (content).</dd>
+    <dt>Frame</dt><dd>An equal-size slot in physical RAM; holds exactly one page (container).</dd>
+    <dt>Page = frame size</dt><dd>One page fills one frame exactly — one-to-one, one big ball per box.</dd>
+    <dt>Page table</dt><dd>Per-process map: virtual page → physical frame. The connector.</dd>
+    <dt>MMU</dt><dd>Hardware that translates virtual → physical on every access.</dd>
+    <dt>Virtual address</dt><dd>= page number (which page) + offset (how far into it).</dd>
+    <dt>TLB</dt><dd>Tiny cache of recent translations so most lookups skip the table.</dd>
+    <dt>External frag.</dt><dd>A PROBLEM (not a method): wasted gaps between blocks → paging cures it.</dd>
+    <dt>Internal frag.</dt><dd>Wasted space inside the last page of a region → paging causes a little.</dd>
+    <dt>Demand paging</dt><dd>Get a frame only on first use, via a page fault.</dd>
+    <dt>Swapping</dt><dd>Push cold pages to disk when RAM is full = virtual memory.</dd>
+  </dl>
+</div>
+
+<!-- Recap -->
+<div class="recap">
+  <h2>🎯 The whole road in one breath</h2>
+  <p>You <b>write code</b> → <b>compiler + linker</b> make an executable on disk → the OS starts a <b>process</b> with a private, imaginary <b>virtual layout</b> → it's cut into <b>pages</b> so it needn't be contiguous (killing external fragmentation) → each page is stored in one <b>frame</b> in RAM → the <b>page table</b> connects page → frame → the <b>MMU</b> translates every address (page number + offset) so scattered RAM looks contiguous → pages load <b>on demand</b> and overflow to <b>disk</b> when RAM is full → the <b>CPU fetches from frames and executes.</b></p>
+</div>
+
+<footer>
+  Made for Anup's Dubai C++ sprint · Systems fundamentals reference · Reasoned out from your own questions 🙌
+</footer>
+
+</div><!-- /wrap -->
+</body>
+</html>
