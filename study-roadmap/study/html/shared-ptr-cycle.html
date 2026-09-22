@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>shared_ptr Circular Reference — why it leaks</title><style>
+:root{--bg:#0e1118;--card:#171c26;--card2:#1e2431;--ink:#e8ecf5;--muted:#9aa4b8;--line:#28303f;
+--accent:#6ea8ff;--accent2:#54e0c0;--amber:#ffcf6b;--pink:#ff8aa0;--code:#0a0d15;--red:#ff6b6b;--green:#54e0c0;}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#0c0f16,#11151f);color:var(--ink);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.6;font-size:16px}
+.wrap{max-width:900px;margin:0 auto;padding:34px 20px 90px}
+h1{font-size:26px;margin:0 0 6px;font-weight:800}
+.sub{color:var(--muted);margin:0 0 22px;font-size:15.5px}
+h2{font-size:19px;margin:30px 0 6px;font-weight:800}
+.tag{display:inline-block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;padding:3px 9px;border-radius:20px;margin-left:8px;vertical-align:middle}
+.tag.bad{color:var(--red);background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.35)}
+.tag.good{color:var(--green);background:rgba(84,224,192,.12);border:1px solid rgba(84,224,192,.3)}
+p{color:#dce2f0;margin:9px 0}
+code{background:var(--card2);border:1px solid var(--line);padding:1px 6px;border-radius:5px;font-family:"SFMono-Regular",Consolas,monospace;font-size:13px;color:var(--accent2)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:14px 0}
+.crux{border-left:4px solid var(--amber);background:rgba(255,207,107,.07)}
+.zones{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0}
+.zone{flex:1;min-width:250px;border:1px dashed var(--line);border-radius:12px;padding:12px 14px}
+.zone h3{margin:0 0 10px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.obj{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0}
+.obj .name{font-weight:800;font-size:15px}
+.cnt{float:right;font-family:monospace;font-weight:800;font-size:12.5px;padding:2px 9px;border-radius:20px}
+.cnt.two{color:var(--amber);background:rgba(255,207,107,.12);border:1px solid rgba(255,207,107,.3)}
+.cnt.one{color:var(--red);background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.35)}
+.cnt.zero{color:var(--green);background:rgba(84,224,192,.12);border:1px solid rgba(84,224,192,.3)}
+.member{font-family:"SFMono-Regular",Consolas,monospace;font-size:12.5px;color:var(--accent);margin-top:6px}
+.hand{background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:7px 11px;margin:7px 0;font-family:"SFMono-Regular",Consolas,monospace;font-size:12.5px}
+.hand.dead{opacity:.45;text-decoration:line-through}
+.held{margin:8px 0 0;padding-left:0;list-style:none;font-size:12.5px;color:var(--muted)}
+.held li{margin:3px 0}
+.held .stack{color:var(--accent)} .held .inside{color:var(--pink)} .held .weak{color:var(--muted)}
+.arrow{font-family:monospace;color:var(--muted)}
+.note{color:var(--muted);font-size:13px}
+.leak{color:var(--red);font-weight:800}
+.ok{color:var(--green);font-weight:800}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow:auto;font-family:"SFMono-Regular",Consolas,monospace;font-size:12.5px;color:#cdd6f4;line-height:1.5}
+footer{margin-top:40px;color:var(--muted);font-size:12.5px;text-align:center}
+</style></head><body><div class="wrap">
+<h1>Why a shared_ptr cycle leaks — and how weak_ptr fixes it</h1>
+<p class="sub">The key is separating the <b>pointer handle</b> from the <b>heap object</b> it points to.</p>
+
+<div class="card crux">
+<b style="color:var(--amber)">⚠ Your exact question: "at <code>}</code> the structs are destroyed, so their shared_ptrs die too — why doesn't it work?"</b>
+<p style="margin-bottom:4px">At <code>}</code>, only the <b>stack handles</b> (<code>main</code>'s local <code>a</code> and <code>b</code>) are destroyed. Each one dying just <b>decrements</b> a count by 1 — it deletes the heap object <b>only if the count hits 0</b>.</p>
+<p style="margin:4px 0 0">The other two shared_ptrs (<code>A.b</code> and <code>B.a</code>) live <b>inside the heap objects</b>, not on the stack. A heap object is destroyed only when its count reaches 0 — but that can't happen until the <i>other</i> object is destroyed first. Each keeps the other alive → nobody reaches 0.</p>
+</div>
+
+<h2>Scene 1 — all shared_ptr, before <code>}</code></h2>
+<div class="zones">
+  <div class="zone"><h3>Stack (main)</h3>
+    <div class="hand">a : shared_ptr&lt;A&gt; <span class="arrow">──▶ A</span></div>
+    <div class="hand">b : shared_ptr&lt;B&gt; <span class="arrow">──▶ B</span></div>
+  </div>
+  <div class="zone"><h3>Heap</h3>
+    <div class="obj"><span class="cnt two">count 2</span><span class="name">Object A</span>
+      <div class="member">A.b : shared_ptr&lt;B&gt; ──▶ B</div>
+      <ul class="held"><li>held by: <span class="stack">main.a (stack)</span> + <span class="inside">B.a (inside B)</span></li></ul>
+    </div>
+    <div class="obj"><span class="cnt two">count 2</span><span class="name">Object B</span>
+      <div class="member">B.a : shared_ptr&lt;A&gt; ──▶ A</div>
+      <ul class="held"><li>held by: <span class="stack">main.b (stack)</span> + <span class="inside">A.b (inside A)</span></li></ul>
+    </div>
+  </div>
+</div>
+<p class="note">A is referenced by 2 pointers → count 2. Same for B.</p>
+
+<h2>Scene 2 — after <code>}</code> (all shared) <span class="tag bad">leak</span></h2>
+<div class="zones">
+  <div class="zone"><h3>Stack (main) — destroyed at }</h3>
+    <div class="hand dead">a : shared_ptr&lt;A&gt;</div>
+    <div class="hand dead">b : shared_ptr&lt;B&gt;</div>
+  </div>
+  <div class="zone"><h3>Heap — still alive!</h3>
+    <div class="obj"><span class="cnt one">count 1</span><span class="name">Object A</span>
+      <ul class="held"><li>held by: <span class="inside">B.a (inside B)</span> only</li></ul>
+    </div>
+    <div class="obj"><span class="cnt one">count 1</span><span class="name">Object B</span>
+      <ul class="held"><li>held by: <span class="inside">A.b (inside A)</span> only</li></ul>
+    </div>
+  </div>
+</div>
+<p><span class="leak">Stuck.</span> Each count dropped 2 → 1 (the stack handles are gone), but each object is still held by the <i>other</i> object's member. Neither reaches 0, so neither destructor runs, so those member pointers never die either. Both objects are unreachable but alive forever → <span class="leak">memory leak</span>.</p>
+
+<h2>Scene 3 — make B.a a weak_ptr <span class="tag good">fixed</span></h2>
+<div class="zones">
+  <div class="zone"><h3>Stack (main) — destroyed at }</h3>
+    <div class="hand dead">a : shared_ptr&lt;A&gt;</div>
+    <div class="hand dead">b : shared_ptr&lt;B&gt;</div>
+  </div>
+  <div class="zone"><h3>Heap</h3>
+    <div class="obj"><span class="cnt one">count 1</span><span class="name">Object A</span>
+      <div class="member">A.b : shared_ptr&lt;B&gt; ──▶ B</div>
+      <ul class="held"><li>held by: <span class="stack">main.a (stack)</span> + <span class="weak">B.a is weak → does NOT count</span></li></ul>
+    </div>
+    <div class="obj"><span class="cnt two">count 2</span><span class="name">Object B</span>
+      <div class="member">B.a : <b>weak_ptr</b>&lt;A&gt; ┈┈▶ A (no count)</div>
+      <ul class="held"><li>held by: <span class="stack">main.b (stack)</span> + <span class="inside">A.b (inside A)</span></li></ul>
+    </div>
+  </div>
+</div>
+<p><span class="ok">Cascade of cleanup:</span> at <code>}</code> → main.a dies → A count 1 → <span class="cnt zero">0</span> → <b>A destroyed</b> → A.b dies → B count 2 → 1 → main.b dies → B count 1 → <span class="cnt zero">0</span> → <b>B destroyed</b>. No leak.</p>
+
+<div class="card">
+<b>The one-line takeaway</b>
+<p style="margin-bottom:0">A <code>shared_ptr</code> stored <i>inside</i> an object keeps the target alive as long as that object lives — and if two objects do this to each other, neither can ever die. <code>weak_ptr</code> observes without counting, so it breaks the deadlock.</p>
+</div>
+
+<footer>Anup · C++/Linux/Systems study · shared_ptr cycles &amp; weak_ptr</footer>
+</div></body></html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>31 chown &amp; Ownership — Study</title><style>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>40 Smart Pointers — Study</title><style>
 :root{--bg:#0e1118;--card:#171c26;--card2:#1e2431;--ink:#e8ecf5;--muted:#9aa4b8;--line:#28303f;
 --accent:#6ea8ff;--accent2:#54e0c0;--amber:#ffcf6b;--pink:#ff8aa0;--code:#0a0d15;}
 *{box-sizing:border-box}
@@ -68,11 +68,22 @@ details.ansbox[open]>summary{margin-bottom:10px;background:rgba(84,224,192,.16);
 .xbtn.ghost{background:var(--card2);color:var(--ink);border:1px solid var(--line)}
 .ansinput{width:100%;margin-top:10px;background:#0b0e16;border:1px solid var(--line);border-radius:9px;color:var(--ink);padding:10px 12px;font-family:inherit;font-size:14px;resize:vertical}
 .ansinput:focus{outline:none;border-color:var(--accent)}
-</style></head><body><div class="wrap"><div class="top"><a href="../index.html">&larr; All topics</a><span class="cat">Linux</span></div>
-<h1><span class="numbadge">31</span> &nbsp;chown &amp; Ownership</h1>
-<p class="summary">Change owner/group; only root can give a file away.</p>
-<div class="card keypoints"><h2>Must-remember points</h2><ul><li><code>chown user file</code>, <code>chown user:group file</code>, <code>chown :group file</code> (group only); <code>-R</code> = recursive. <code>chgrp group file</code> changes only the group.</li><li><strong>Only root (sudo) can change a file's owner</strong> — a regular user can't give their file away or take another's. The owner CAN change the group to one they belong to.</li><li>Ownership + rwx triplets together gate access: a process's UID/GID is checked against owner/group/other bits on every open/read/write.</li><li><code>id</code> = your UID/GID/groups; <code>whoami</code> = your username.</li><li>Systems relevance: deploying a service = chown binary/data to a service user; setuid / privilege-dropping daemons rely on ownership.</li></ul></div>
-<div class="card confuse"><h2>&#9888; Easily confused</h2><div class="pair"><div class="vs">chown vs chgrp</div><div class="d">chown changes owner (and optionally group); chgrp changes only the group.</div></div><div class="pair"><div class="vs">id vs whoami</div><div class="d"><code>id</code> shows your UID/GID and all groups; <code>whoami</code> shows just your username.</div></div></div>
-<div class="card testcta"><h2 style="margin-top:0">Test yourself</h2><p>4 single-focus questions on this topic (answer hidden behind its own button).</p><a class="bigbtn" href="../questions/master-question-sheet.html#chown-ownership">Go to chown &amp; Ownership questions &rarr;</a></div>
-<div class="nav"><a href="30-chmod.html">&larr; 30 chmod</a><a class="next" href="32-member-initializer-list.html">32 Member Initializer List &rarr;</a></div>
+</style></head><body><div class="wrap"><div class="top"><a href="../index.html">&larr; All topics</a><span class="cat">C++ Core</span></div>
+<h1><span class="numbadge">40</span> &nbsp;Smart Pointers</h1>
+<p class="summary">RAII wrappers that own a heap object and delete it automatically.</p>
+<div class="card keypoints"><h2>Must-remember points</h2><ul><li>Smart pointers (in <code>&lt;memory&gt;</code>) are <strong>RAII wrappers</strong> around a raw pointer: they own the heap object and auto-<code>delete</code> it when they go out of scope — no manual delete, leaks, or dangling.</li><li><strong><code>unique_ptr</code></strong> = <strong>sole</strong> owner; can't be copied, only <strong>moved</strong> (<code>std::move</code>); near-zero overhead. Your default. Create with <code>make_unique</code>.</li><li><strong><code>shared_ptr</code></strong> = <strong>shared</strong> ownership via a <strong>reference count</strong>; the object is deleted when the count hits 0 (<code>use_count()</code>). Create with <code>make_shared</code> (one allocation). Has a control-block overhead.</li><li><strong><code>weak_ptr</code></strong> = <strong>non-owning</strong> observer of a <code>shared_ptr</code>; does NOT change the count. Used to <strong>break circular references</strong> and to check/access via <code>.lock()</code> (or <code>.expired()</code>). (See <a href="shared-ptr-cycle.html">circular reference diagram</a>.)</li><li>Prefer <code>make_unique</code>/<code>make_shared</code> over raw <code>new</code> (exception-safe, no raw <code>new</code>). Smart pointers overload <code>*</code> and <code>-&gt;</code>, so you use them like raw pointers.</li><li>Members: <code>.get()</code> (raw pointer — don't delete), <code>.reset()</code> (delete now), <code>unique_ptr::release()</code> (give up ownership WITHOUT deleting — you must delete). Use raw pointers/references only for non-owning <strong>borrowing</strong>.</li></ul></div>
+<h2>Creating, moving, sharing, observing</h2><pre>#include &lt;memory&gt;
+
+auto u = std::make_unique&lt;Entity&gt;();   // sole owner
+auto v = std::move(u);                 // ownership moved; u is now nullptr
+
+auto s  = std::make_shared&lt;Entity&gt;();  // use_count() == 1
+auto s2 = s;                           // use_count() == 2 (shared)
+std::weak_ptr&lt;Entity&gt; w = s;           // observes, does NOT bump the count
+if (auto sp = w.lock()) { /* alive -&gt; use sp */ }
+
+v-&gt;method();   // smart pointers use -&gt; and * like raw pointers</pre>
+<div class="card confuse"><h2>&#9888; Easily confused</h2><div class="pair"><div class="vs">unique_ptr vs shared_ptr</div><div class="d">unique = one owner, move-only, no overhead. shared = many owners, ref-counted, deleted at count 0 (has a control block).</div></div><div class="pair"><div class="vs">weak_ptr vs shared_ptr</div><div class="d">shared owns and counts. weak observes without counting — breaks cycles; use <code>.lock()</code> to access safely.</div></div><div class="pair"><div class="vs">release() vs reset() vs move</div><div class="d">release() = give up ownership, NO delete (you must delete). reset() = delete now. move = transfer to another smart pointer.</div></div><div class="pair"><div class="vs">owning vs non-owning</div><div class="d">Smart pointers express ownership. Raw pointers/references are for borrowing — never delete through them.</div></div></div>
+<div class="card testcta"><h2 style="margin-top:0">Test yourself</h2><p>6 single-focus questions on this topic (answer hidden behind its own button).</p><a class="bigbtn" href="../questions/master-question-sheet.html#smart-pointers">Go to Smart Pointers questions &rarr;</a></div>
+<div class="nav"><a href="39-object-lifetime.html">&larr; 39 Object Lifetime</a><a class="next" href="41-copy-constructors.html">41 Copying &amp; Copy Constructors &rarr;</a></div>
 <footer>Anup &middot; C++/Linux/Systems study &middot; reference page</footer></div></body></html>

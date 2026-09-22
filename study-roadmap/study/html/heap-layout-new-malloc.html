@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Heap Layout — new / delete / malloc / free</title><style>
+:root{--bg:#0e1118;--card:#171c26;--card2:#1e2431;--ink:#e8ecf5;--muted:#9aa4b8;--line:#28303f;
+--accent:#6ea8ff;--accent2:#54e0c0;--amber:#ffcf6b;--pink:#ff8aa0;--code:#0a0d15;}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#0c0f16,#11151f);color:var(--ink);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.6;font-size:16px}
+.wrap{max-width:900px;margin:0 auto;padding:34px 20px 90px}
+h1{font-size:27px;margin:0 0 6px;font-weight:800}
+.sub{color:var(--muted);margin:0 0 24px;font-size:16px}
+h2{font-size:20px;margin:34px 0 6px;font-weight:800}
+.tag{display:inline-block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;padding:3px 9px;border-radius:20px;margin-left:8px;vertical-align:middle}
+.tag.c{color:var(--accent2);background:rgba(84,224,192,.12);border:1px solid rgba(84,224,192,.3)}
+.tag.n{color:var(--accent);background:rgba(110,168,255,.12);border:1px solid rgba(110,168,255,.3)}
+.tag.a{color:var(--pink);background:rgba(255,138,160,.12);border:1px solid rgba(255,138,160,.3)}
+p{color:#dce2f0;margin:10px 0}
+code{background:var(--card2);border:1px solid var(--line);padding:1px 6px;border-radius:5px;font-family:"SFMono-Regular",Consolas,monospace;font-size:13.5px;color:var(--accent2)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:14px 0 8px;box-shadow:0 10px 26px rgba(0,0,0,.25)}
+.crux{border-left:4px solid var(--amber);background:rgba(255,207,107,.07)}
+.mem{display:flex;gap:4px;margin:20px 0 6px;align-items:stretch}
+.cell{border-radius:9px;padding:12px 10px;text-align:center;border:1px solid var(--line);min-height:82px;display:flex;flex-direction:column;justify-content:center}
+.cell b{font-size:13.5px;font-weight:800;letter-spacing:.02em}
+.cell small{display:block;color:var(--muted);font-size:11.5px;margin-top:5px;line-height:1.35}
+.header{background:rgba(255,207,107,.14);border-color:rgba(255,207,107,.4);flex:2.4}
+.header b{color:var(--amber)}
+.cookie{background:rgba(255,138,160,.14);border-color:rgba(255,138,160,.4);flex:1.5}
+.cookie b{color:var(--pink)}
+.data{background:rgba(84,224,192,.13);border-color:rgba(84,224,192,.4);flex:3}
+.data b{color:var(--accent2)}
+.data2{background:rgba(84,224,192,.08);border-color:rgba(84,224,192,.3);flex:3}
+.data2 b{color:var(--accent2)}
+.pad{background:rgba(154,164,184,.1);border-color:var(--line);flex:1.4}
+.pad b{color:var(--muted)}
+.ptrs{display:flex;gap:4px;margin-bottom:8px}
+.pt{font-family:"SFMono-Regular",Consolas,monospace;font-size:12px;font-weight:700;text-align:center;padding:0 4px}
+.pt.blue{color:var(--accent)} .pt.amber{color:var(--amber)} .pt.pink{color:var(--pink)}
+.steps{margin:10px 0 0;padding-left:0;list-style:none}
+.steps li{margin:7px 0;padding-left:26px;position:relative;color:#dce2f0;font-size:14.5px}
+.steps li::before{content:attr(data-n);position:absolute;left:0;top:0;width:18px;height:18px;border-radius:50%;background:var(--card2);border:1px solid var(--line);color:var(--accent2);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;font-family:monospace}
+.note{color:var(--muted);font-size:13.5px;margin-top:8px}
+footer{margin-top:40px;color:var(--muted);font-size:12.5px;text-align:center}
+</style></head><body><div class="wrap">
+<h1>How the heap stores your allocation</h1>
+<p class="sub">Where the metadata sits, how much space is really used, and how <code>free</code>/<code>delete</code> work from just the pointer <code>p</code>.</p>
+
+<div class="card crux">
+<b style="color:var(--amber)">⚠ The crux: two different "sizes"</b>
+<p style="margin-bottom:4px"><b>Header offset</b> = a <b>fixed constant</b> hard-coded in the allocator (e.g. 16 bytes). Not stored — the allocator's own code knows it. That's why <code>free(p)</code> can compute <code>p - headerSize</code> from just <code>p</code>.</p>
+<p style="margin-top:4px"><b>Block size</b> = how big <i>this</i> allocation is. This <b>is</b> stored, inside the header. <code>free</code> uses the fixed offset to <i>find</i> the header, then <i>reads</i> the block size from it.</p>
+</div>
+
+<h2>1. malloc + free <span class="tag c">C</span></h2>
+<div class="mem">
+  <div class="cell header"><b>HEADER</b><small>block size + flags / free-list links</small></div>
+  <div class="cell data"><b>YOUR DATA</b><small>raw bytes, e.g. malloc(4)<br>NOT initialized</small></div>
+  <div class="cell pad"><b>PADDING</b><small>alignment</small></div>
+</div>
+<div class="ptrs">
+  <div class="pt amber" style="flex:2.4">▲ p − headerSize<br>(header lives here)</div>
+  <div class="pt blue" style="flex:3">▲ p (malloc returns this)</div>
+  <div class="pt" style="flex:1.4"></div>
+</div>
+<ul class="steps">
+  <li data-n="1"><code>malloc(4)</code> reserves HEADER + 4 bytes + padding; returns <code>p</code> pointing at your data.</li>
+  <li data-n="2"><code>free(p)</code>: go to <code>p − headerSize</code> (fixed offset), read the block size, return the whole chunk to the free list.</li>
+  <li data-n="3"><b>No constructor, no destructor.</b> malloc/free only move raw memory.</li>
+</ul>
+
+<h2>2. new + delete <span class="tag n">C++</span></h2>
+<div class="mem">
+  <div class="cell header"><b>HEADER</b><small>block size + flags / links</small></div>
+  <div class="cell data"><b>YOUR OBJECT</b><small>constructor HAS run<br>e.g. new Entity()</small></div>
+  <div class="cell pad"><b>PADDING</b><small>alignment</small></div>
+</div>
+<div class="ptrs">
+  <div class="pt amber" style="flex:2.4">▲ p − headerSize</div>
+  <div class="pt blue" style="flex:3">▲ p (new returns this)</div>
+  <div class="pt" style="flex:1.4"></div>
+</div>
+<ul class="steps">
+  <li data-n="1"><code>new Entity()</code> = <b>operator new</b> (usually calls malloc → same header layout) <b>+ runs the constructor</b> on the object.</li>
+  <li data-n="2"><code>delete p</code>: <b>runs the destructor first</b> (on the object at <code>p</code>), THEN frees the chunk exactly like <code>free</code> (<code>p − headerSize</code> → read size → free list).</li>
+  <li data-n="3">So layout is the same as malloc; <code>new</code>/<code>delete</code> just add ctor/dtor on top.</li>
+</ul>
+
+<h2>3. new[] + delete[] <span class="tag a">C++ arrays</span></h2>
+<div class="mem">
+  <div class="cell header"><b>HEADER</b><small>allocator: block size + links</small></div>
+  <div class="cell cookie"><b>COUNT COOKIE</b><small>n = number of elements</small></div>
+  <div class="cell data"><b>elem[0]</b><small>ctor ran</small></div>
+  <div class="cell data2"><b>elem[1] …</b><small>ctor ran</small></div>
+  <div class="cell pad"><b>PAD</b></div>
+</div>
+<div class="ptrs">
+  <div class="pt amber" style="flex:2.4">▲ allocator header</div>
+  <div class="pt pink" style="flex:1.5">▲ p − cookieSize</div>
+  <div class="pt blue" style="flex:6">▲ p (points at elem[0])</div>
+  <div class="pt" style="flex:1.4"></div>
+</div>
+<ul class="steps">
+  <li data-n="1"><code>new Entity[n]</code> stores an extra <b>count cookie</b> (the value <code>n</code>) just before the first element, at a fixed compiler-defined offset.</li>
+  <li data-n="2"><code>delete[] p</code>: read <code>n</code> from <code>p − cookieSize</code>, <b>run the destructor n times</b> (elem n−1 … elem 0), THEN free the whole block.</li>
+  <li data-n="3">Plain <code>delete p</code> here skips the count → wrong number of destructors + allocator confusion = <b>undefined behaviour</b>. That's why <code>new[]</code> needs <code>delete[]</code>.</li>
+</ul>
+<p class="note">Note: for simple types like <code>int[]</code> (no destructor) some compilers skip the count cookie — but for objects with destructors it's always there. Exact header/cookie sizes are allocator- and compiler-specific; the shapes above are the idea, not exact byte counts.</p>
+
+<div class="card" style="border-left:4px solid var(--accent2);background:rgba(84,224,192,.06)">
+<b style="color:var(--accent2)">The pairing rule (never cross these)</b>
+<p style="margin-bottom:0"><code>malloc</code> ↔ <code>free</code> &nbsp;•&nbsp; <code>new</code> ↔ <code>delete</code> &nbsp;•&nbsp; <code>new[]</code> ↔ <code>delete[]</code>. Crossing them (e.g. <code>free</code> on a <code>new</code> pointer) skips the destructor and can mismatch allocators → corruption / UB.</p>
+</div>
+
+<footer>Anup · C++/Linux/Systems study · heap memory layout</footer>
+</div></body></html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>31 chown &amp; Ownership — Study</title><style>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>38 The this Keyword — Study</title><style>
 :root{--bg:#0e1118;--card:#171c26;--card2:#1e2431;--ink:#e8ecf5;--muted:#9aa4b8;--line:#28303f;
 --accent:#6ea8ff;--accent2:#54e0c0;--amber:#ffcf6b;--pink:#ff8aa0;--code:#0a0d15;}
 *{box-sizing:border-box}
@@ -68,11 +68,26 @@ details.ansbox[open]>summary{margin-bottom:10px;background:rgba(84,224,192,.16);
 .xbtn.ghost{background:var(--card2);color:var(--ink);border:1px solid var(--line)}
 .ansinput{width:100%;margin-top:10px;background:#0b0e16;border:1px solid var(--line);border-radius:9px;color:var(--ink);padding:10px 12px;font-family:inherit;font-size:14px;resize:vertical}
 .ansinput:focus{outline:none;border-color:var(--accent)}
-</style></head><body><div class="wrap"><div class="top"><a href="../index.html">&larr; All topics</a><span class="cat">Linux</span></div>
-<h1><span class="numbadge">31</span> &nbsp;chown &amp; Ownership</h1>
-<p class="summary">Change owner/group; only root can give a file away.</p>
-<div class="card keypoints"><h2>Must-remember points</h2><ul><li><code>chown user file</code>, <code>chown user:group file</code>, <code>chown :group file</code> (group only); <code>-R</code> = recursive. <code>chgrp group file</code> changes only the group.</li><li><strong>Only root (sudo) can change a file's owner</strong> — a regular user can't give their file away or take another's. The owner CAN change the group to one they belong to.</li><li>Ownership + rwx triplets together gate access: a process's UID/GID is checked against owner/group/other bits on every open/read/write.</li><li><code>id</code> = your UID/GID/groups; <code>whoami</code> = your username.</li><li>Systems relevance: deploying a service = chown binary/data to a service user; setuid / privilege-dropping daemons rely on ownership.</li></ul></div>
-<div class="card confuse"><h2>&#9888; Easily confused</h2><div class="pair"><div class="vs">chown vs chgrp</div><div class="d">chown changes owner (and optionally group); chgrp changes only the group.</div></div><div class="pair"><div class="vs">id vs whoami</div><div class="d"><code>id</code> shows your UID/GID and all groups; <code>whoami</code> shows just your username.</div></div></div>
-<div class="card testcta"><h2 style="margin-top:0">Test yourself</h2><p>4 single-focus questions on this topic (answer hidden behind its own button).</p><a class="bigbtn" href="../questions/master-question-sheet.html#chown-ownership">Go to chown &amp; Ownership questions &rarr;</a></div>
-<div class="nav"><a href="30-chmod.html">&larr; 30 chmod</a><a class="next" href="32-member-initializer-list.html">32 Member Initializer List &rarr;</a></div>
+</style></head><body><div class="wrap"><div class="top"><a href="../index.html">&larr; All topics</a><span class="cat">C++ Core</span></div>
+<h1><span class="numbadge">38</span> &nbsp;The this Keyword</h1>
+<p class="summary">A pointer to the current object, available inside non-static member functions.</p>
+<div class="card keypoints"><h2>Must-remember points</h2><ul><li><code>this</code> is a pointer available in every <strong>non-static</strong> member function, holding the <strong>address of the object</strong> the function was called on.</li><li>Type: non-const method -&gt; <code>Entity* const</code> (can change the object, can't reseat the pointer); const method -&gt; <code>const Entity* const</code> (can't change the object either).</li><li><code>this</code> = the pointer (address); <code>*this</code> = the object. Use <code>this-&gt;m</code> or <code>(*this).m</code>; return <code>*this</code> <strong>by reference</strong> (<code>Entity&amp;</code>) for chaining — returning it by value copies.</li><li>Main uses: disambiguate a member from a same-named parameter (<code>this-&gt;a = a;</code>), return <code>*this</code> for chaining, and self-comparison (<code>this == &amp;other</code>).</li><li><code>this-&gt;</code> is <strong>optional</strong> for member access — needed only to disambiguate a same-named parameter (or dependent names in templates).</li><li><strong>Static</strong> member functions have no <code>this</code> (not tied to an object). The compiler passes <code>this</code> as a hidden first argument to each non-static call.</li></ul></div>
+<h2>The three main uses of this</h2><pre>class Entity {
+    int a;
+public:
+    Entity(int a) { this-&gt;a = a; }              // (a) disambiguate member vs parameter
+
+    Entity&amp; setA(int a) { this-&gt;a = a; return *this; }   // (b) chain: e.setA(1).setA(2);
+
+    Entity&amp; operator=(const Entity&amp; rhs) {
+        if (this == &amp;rhs) return *this;         // (c) self-assignment guard
+        a = rhs.a;
+        return *this;
+    }
+
+    int getA() const { return a; }              // const member: this is const Entity* const
+};</pre>
+<div class="card confuse"><h2>&#9888; Easily confused</h2><div class="pair"><div class="vs">this vs *this</div><div class="d"><code>this</code> = the pointer (address of the object). <code>*this</code> = the object itself. Return <code>*this</code> by reference to chain.</div></div><div class="pair"><div class="vs">non-const vs const member this</div><div class="d">non-const method: <code>Entity* const</code> (can change the object). const method: <code>const Entity* const</code> (can't change it).</div></div><div class="pair"><div class="vs">this-&gt; optional vs required</div><div class="d">Member access usually needs no <code>this-&gt;</code>. Required only to disambiguate a same-named parameter (or dependent names in templates).</div></div></div>
+<div class="card testcta"><h2 style="margin-top:0">Test yourself</h2><p>5 single-focus questions on this topic (answer hidden behind its own button).</p><a class="bigbtn" href="../questions/master-question-sheet.html#this-keyword">Go to The this Keyword questions &rarr;</a></div>
+<div class="nav"><a href="37-operator-overloading.html">&larr; 37 Operators &amp; Operator Overloading</a><a class="next" href="39-object-lifetime.html">39 Object Lifetime &rarr;</a></div>
 <footer>Anup &middot; C++/Linux/Systems study &middot; reference page</footer></div></body></html>

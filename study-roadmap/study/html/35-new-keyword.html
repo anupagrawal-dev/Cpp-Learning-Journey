@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>31 chown &amp; Ownership — Study</title><style>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>35 The new Keyword — Study</title><style>
 :root{--bg:#0e1118;--card:#171c26;--card2:#1e2431;--ink:#e8ecf5;--muted:#9aa4b8;--line:#28303f;
 --accent:#6ea8ff;--accent2:#54e0c0;--amber:#ffcf6b;--pink:#ff8aa0;--code:#0a0d15;}
 *{box-sizing:border-box}
@@ -68,11 +68,20 @@ details.ansbox[open]>summary{margin-bottom:10px;background:rgba(84,224,192,.16);
 .xbtn.ghost{background:var(--card2);color:var(--ink);border:1px solid var(--line)}
 .ansinput{width:100%;margin-top:10px;background:#0b0e16;border:1px solid var(--line);border-radius:9px;color:var(--ink);padding:10px 12px;font-family:inherit;font-size:14px;resize:vertical}
 .ansinput:focus{outline:none;border-color:var(--accent)}
-</style></head><body><div class="wrap"><div class="top"><a href="../index.html">&larr; All topics</a><span class="cat">Linux</span></div>
-<h1><span class="numbadge">31</span> &nbsp;chown &amp; Ownership</h1>
-<p class="summary">Change owner/group; only root can give a file away.</p>
-<div class="card keypoints"><h2>Must-remember points</h2><ul><li><code>chown user file</code>, <code>chown user:group file</code>, <code>chown :group file</code> (group only); <code>-R</code> = recursive. <code>chgrp group file</code> changes only the group.</li><li><strong>Only root (sudo) can change a file's owner</strong> — a regular user can't give their file away or take another's. The owner CAN change the group to one they belong to.</li><li>Ownership + rwx triplets together gate access: a process's UID/GID is checked against owner/group/other bits on every open/read/write.</li><li><code>id</code> = your UID/GID/groups; <code>whoami</code> = your username.</li><li>Systems relevance: deploying a service = chown binary/data to a service user; setuid / privilege-dropping daemons rely on ownership.</li></ul></div>
-<div class="card confuse"><h2>&#9888; Easily confused</h2><div class="pair"><div class="vs">chown vs chgrp</div><div class="d">chown changes owner (and optionally group); chgrp changes only the group.</div></div><div class="pair"><div class="vs">id vs whoami</div><div class="d"><code>id</code> shows your UID/GID and all groups; <code>whoami</code> shows just your username.</div></div></div>
-<div class="card testcta"><h2 style="margin-top:0">Test yourself</h2><p>4 single-focus questions on this topic (answer hidden behind its own button).</p><a class="bigbtn" href="../questions/master-question-sheet.html#chown-ownership">Go to chown &amp; Ownership questions &rarr;</a></div>
-<div class="nav"><a href="30-chmod.html">&larr; 30 chmod</a><a class="next" href="32-member-initializer-list.html">32 Member Initializer List &rarr;</a></div>
+</style></head><body><div class="wrap"><div class="top"><a href="../index.html">&larr; All topics</a><span class="cat">C++ Core</span></div>
+<h1><span class="numbadge">35</span> &nbsp;The new Keyword</h1>
+<p class="summary">new = allocate on the heap + run the constructor; delete = destructor + free.</p>
+<div class="card keypoints"><h2>Must-remember points</h2><ul><li><code>new</code> is an <strong>operator</strong> that does two things: allocates heap memory (via <code>operator new</code>, usually <code>malloc</code>) <strong>and calls the constructor</strong>. Returns a <strong>typed pointer</strong>. <code>delete</code> = destructor + free.</li><li>Sizes: <code>new int</code> (4B, garbage), <code>new int()</code> (4B, zero-init), <code>new int[n]</code> (n can be a <strong>runtime</strong> value — dynamic array).</li><li>Pairing (mismatch = UB): <code>new</code>&harr;<code>delete</code>, <code>new[]</code>&harr;<code>delete[]</code>, <code>malloc</code>&harr;<code>free</code>. Never cross them.</li><li><code>new</code> vs <code>malloc</code>: new calls ctor/dtor, returns a <strong>typed</strong> pointer (no cast), and <strong>throws <code>std::bad_alloc</code></strong> on failure; malloc = raw bytes, <code>void*</code>, returns <code>nullptr</code>, no ctor.</li><li>Heap layout: a <strong>fixed-size header</strong> sits <em>before</em> <code>p</code> (stores the block size); <code>free</code>/<code>delete</code> do <code>p - headerSize</code> (offset is a compile-time constant) to find it. <code>new[]</code> also stores a <strong>count cookie</strong> so <code>delete[]</code> runs every destructor. (See <a href="heap-layout-new-malloc.html">heap layout diagram</a>.)</li><li>Modern C++: prefer smart pointers (<code>make_unique</code>/<code>make_shared</code>) over raw <code>new</code>/<code>delete</code>.</li></ul></div>
+<h2>Syntax and matching delete</h2><pre>int*    a   = new int;       // 4 bytes, uninitialized (garbage)
+int*    b   = new int();     // 4 bytes, zero-initialized
+int*    arr = new int[n];     // runtime-sized array (n from a variable)
+Entity* e   = new Entity();   // allocate + run constructor
+
+delete a;        // matches new
+delete b;
+delete[] arr;    // matches new[]  (runs each destructor)
+delete e;        // destructor + free</pre>
+<div class="card confuse"><h2>&#9888; Easily confused</h2><div class="pair"><div class="vs">new vs malloc</div><div class="d">new calls the ctor + returns a typed pointer + throws bad_alloc on failure. malloc = raw bytes only, void*, returns nullptr, no ctor.</div></div><div class="pair"><div class="vs">delete vs free</div><div class="d">delete = destructor THEN free. free = free only (no destructor).</div></div><div class="pair"><div class="vs">delete vs delete[]</div><div class="d">delete = one object. delete[] reads the stored element count and runs the destructor for every element.</div></div><div class="pair"><div class="vs">header offset vs block size</div><div class="d">Header offset = fixed constant known by the allocator (so <code>p - headerSize</code> works). Block size = variable, stored in the header and read at free time.</div></div></div>
+<div class="card testcta"><h2 style="margin-top:0">Test yourself</h2><p>6 single-focus questions on this topic (answer hidden behind its own button).</p><a class="bigbtn" href="../questions/master-question-sheet.html#new-keyword">Go to The new Keyword questions &rarr;</a></div>
+<div class="nav"><a href="34-creating-objects.html">&larr; 34 Creating / Instantiating Objects</a><a class="next" href="36-implicit-conversion-explicit.html">36 Implicit Conversion &amp; explicit &rarr;</a></div>
 <footer>Anup &middot; C++/Linux/Systems study &middot; reference page</footer></div></body></html>

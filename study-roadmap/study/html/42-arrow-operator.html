@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>31 chown &amp; Ownership — Study</title><style>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>42 The Arrow Operator — Study</title><style>
 :root{--bg:#0e1118;--card:#171c26;--card2:#1e2431;--ink:#e8ecf5;--muted:#9aa4b8;--line:#28303f;
 --accent:#6ea8ff;--accent2:#54e0c0;--amber:#ffcf6b;--pink:#ff8aa0;--code:#0a0d15;}
 *{box-sizing:border-box}
@@ -68,11 +68,32 @@ details.ansbox[open]>summary{margin-bottom:10px;background:rgba(84,224,192,.16);
 .xbtn.ghost{background:var(--card2);color:var(--ink);border:1px solid var(--line)}
 .ansinput{width:100%;margin-top:10px;background:#0b0e16;border:1px solid var(--line);border-radius:9px;color:var(--ink);padding:10px 12px;font-family:inherit;font-size:14px;resize:vertical}
 .ansinput:focus{outline:none;border-color:var(--accent)}
-</style></head><body><div class="wrap"><div class="top"><a href="../index.html">&larr; All topics</a><span class="cat">Linux</span></div>
-<h1><span class="numbadge">31</span> &nbsp;chown &amp; Ownership</h1>
-<p class="summary">Change owner/group; only root can give a file away.</p>
-<div class="card keypoints"><h2>Must-remember points</h2><ul><li><code>chown user file</code>, <code>chown user:group file</code>, <code>chown :group file</code> (group only); <code>-R</code> = recursive. <code>chgrp group file</code> changes only the group.</li><li><strong>Only root (sudo) can change a file's owner</strong> — a regular user can't give their file away or take another's. The owner CAN change the group to one they belong to.</li><li>Ownership + rwx triplets together gate access: a process's UID/GID is checked against owner/group/other bits on every open/read/write.</li><li><code>id</code> = your UID/GID/groups; <code>whoami</code> = your username.</li><li>Systems relevance: deploying a service = chown binary/data to a service user; setuid / privilege-dropping daemons rely on ownership.</li></ul></div>
-<div class="card confuse"><h2>&#9888; Easily confused</h2><div class="pair"><div class="vs">chown vs chgrp</div><div class="d">chown changes owner (and optionally group); chgrp changes only the group.</div></div><div class="pair"><div class="vs">id vs whoami</div><div class="d"><code>id</code> shows your UID/GID and all groups; <code>whoami</code> shows just your username.</div></div></div>
-<div class="card testcta"><h2 style="margin-top:0">Test yourself</h2><p>4 single-focus questions on this topic (answer hidden behind its own button).</p><a class="bigbtn" href="../questions/master-question-sheet.html#chown-ownership">Go to chown &amp; Ownership questions &rarr;</a></div>
-<div class="nav"><a href="30-chmod.html">&larr; 30 chmod</a><a class="next" href="32-member-initializer-list.html">32 Member Initializer List &rarr;</a></div>
+</style></head><body><div class="wrap"><div class="top"><a href="../index.html">&larr; All topics</a><span class="cat">C++ Core</span></div>
+<h1><span class="numbadge">42</span> &nbsp;The Arrow Operator</h1>
+<p class="summary">ptr-&gt;member is shorthand for (*ptr).member — and you can overload it.</p>
+<div class="card keypoints"><h2>Must-remember points</h2><ul><li><code>ptr-&gt;member</code> is shorthand for <code>(*ptr).member</code> — <strong>dereference</strong> the pointer, then apply the dot.</li><li><code>.</code> is used on an <strong>object</strong> (or reference); <code>-&gt;</code> on a <strong>pointer</strong> (raw or smart).</li><li>For a <strong>raw pointer</strong>, <code>-&gt;</code> is <strong>built-in</strong>. For your own class you can <strong>overload <code>operator-&gt;</code></strong> — that's how smart pointers and iterators work.</li><li>An overloaded <code>operator-&gt;</code> returns a <strong>pointer</strong>; the compiler then applies the real <code>-&gt;</code> to it (and keeps chaining until it reaches a raw pointer).</li><li>That's why <code>unique_ptr</code>/<code>shared_ptr</code> let you write <code>p-&gt;method()</code> even though <code>p</code> is an object, not a raw pointer.</li><li>(Curiosity: <code>-&gt;</code> through a null-cast pointer is the trick behind <code>offsetof</code> for a member's byte offset — don't use it in real code.)</li></ul></div>
+<h2>Raw pointer, and a custom operator-&gt;</h2><pre>struct Entity {
+    int a;
+    void print() const { std::cout &lt;&lt; a; }
+};
+
+// raw pointer
+Entity* e = new Entity{5};
+(*e).a = 10;    // the long way
+e-&gt;a   = 10;    // shorthand — identical
+e-&gt;print();
+delete e;
+
+// custom operator-&gt; (a mini smart pointer)
+class Wrapper {
+    Entity* ptr;
+public:
+    Wrapper(Entity* p) : ptr(p) {}
+    Entity* operator-&gt;() { return ptr; }   // overloaded arrow returns a pointer
+};
+Wrapper w(new Entity{5});
+w-&gt;print();     // w.operator-&gt;()-&gt;print()</pre>
+<div class="card confuse"><h2>&#9888; Easily confused</h2><div class="pair"><div class="vs">. vs -&gt;</div><div class="d"><code>.</code> on an object/reference. <code>-&gt;</code> on a pointer (raw or smart); <code>p-&gt;m</code> == <code>(*p).m</code>.</div></div><div class="pair"><div class="vs">built-in -&gt; vs overloaded -&gt;</div><div class="d">Raw pointer: <code>-&gt;</code> is built-in. Custom class (smart pointer / iterator): you overload <code>operator-&gt;</code>, which returns a pointer.</div></div></div>
+<div class="card testcta"><h2 style="margin-top:0">Test yourself</h2><p>4 single-focus questions on this topic (answer hidden behind its own button).</p><a class="bigbtn" href="../questions/master-question-sheet.html#arrow-operator">Go to The Arrow Operator questions &rarr;</a></div>
+<div class="nav"><a href="41-copy-constructors.html">&larr; 41 Copying &amp; Copy Constructors</a><a class="next" href="../questions/master-question-sheet.html">Question bank &rarr;</a></div>
 <footer>Anup &middot; C++/Linux/Systems study &middot; reference page</footer></div></body></html>

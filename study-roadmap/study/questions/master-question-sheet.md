@@ -1,6 +1,6 @@
 # Master Question Bank
 
-133 single-focus questions across 31 topics, in learning order. Each question asks one thing; the answer is hidden in a <details> block.
+192 single-focus questions across 42 topics, in learning order. Each question asks one thing; the answer is hidden in a <details> block. (Topics 32–42 — Member Initializer List, Ternary Operator, Creating / Instantiating Objects, The new Keyword, Implicit Conversion & explicit, Operators & Operator Overloading, The this Keyword, Object Lifetime, Smart Pointers, Copying & Copy Constructors, The Arrow Operator — were added on 2026-09-13…20 and appear at the end until the next full regenerate re-sorts them into C++ Core.)
 
 ## C++ Core
 
@@ -1298,5 +1298,490 @@ They're checked **together** on every open/read/write/execute. The kernel compar
 <details><summary>Show answer</summary>
 
 `whoami` prints just your **username**. `id` prints your numeric **UID**, primary **GID**, and **all group memberships**. That extra detail is what matters for permissions, because the kernel checks those numeric IDs (not the name) against a file's owner/group to decide which rwx triplet applies to you.
+
+</details>
+
+## C++ Core (continued)
+
+### 32 — Member Initializer List  (6 Qs)
+**Q134. What is the difference between initialization (in the list) and assignment (in the body)?**
+
+<details><summary>Show answer</summary>
+
+The list **initializes** a member directly, once, as the object is built. In the body the member already exists (default-constructed / indeterminate), so `a = x;` only **assigns** — for class members that's default-construct + reassign (two steps) vs one.
+
+</details>
+
+**Q135. Which members MUST be initialized in the list (won't compile otherwise)?**
+
+<details><summary>Show answer</summary>
+
+`const` members, **reference** members, member objects whose type has **no default constructor**, and a **base class** with no default constructor.
+
+</details>
+
+**Q136. How do you pass an argument to a base class constructor?**
+
+<details><summary>Show answer</summary>
+
+In the derived class's initializer list: `Derived(int x) : Base(x) {}`. It's the only place you can — omit it and the base's default ctor is called (error if none). Needed even inside a default constructor.
+
+</details>
+
+**Q137. In what order are members initialized?**
+
+<details><summary>Show answer</summary>
+
+In the order they are **declared** in the class, not the order written in the list (bases first, then members). So don't initialize one member from another that's declared after it.
+
+</details>
+
+**Q138. What is a delegating constructor, and its one rule?**
+
+<details><summary>Show answer</summary>
+
+One constructor calls another of the same class through the list (`Entity() : Entity(0) {}`) to reuse setup. Rule: the delegation must be the **only** item in the list.
+
+</details>
+
+**Q139. If C++11 lets you write `int a = 0;` at the declaration, why is the init list still needed?**
+
+<details><summary>Show answer</summary>
+
+A default member initializer is a **fixed** fallback, same for every object, and can't use constructor arguments or initialize a base class. The list is needed for **argument-driven** values and for **base class** initialization.
+
+</details>
+
+### 33 — Ternary Operator  (6 Qs)
+**Q140. Is the ternary a statement or an expression, and why does that matter?**
+
+<details><summary>Show answer</summary>
+
+An **expression** — it produces a value. That's why it can be used inline where a value is needed (initializing a variable or a `const`, a `return`, a function argument), which an `if/else` statement can't do.
+
+</details>
+
+**Q141. Why can a ternary initialize a `const` when if/else can't?**
+
+<details><summary>Show answer</summary>
+
+A `const` must get its value at the moment of declaration, in one shot. The ternary is a single expression that yields that value. `if/else` runs *after* the variable exists, forcing declare-then-assign — which `const` forbids.
+
+</details>
+
+**Q142. In `cond ? 1 : 2.5`, what is the result type and why?**
+
+<details><summary>Show answer</summary>
+
+**double**. The two branches must have a common type; `int` and `double` convert to the common type `double`, so `1` becomes `1.0` and the whole expression is `double` — regardless of which branch is chosen.
+
+</details>
+
+**Q143. When do the two branches make a ternary fail to compile?**
+
+<details><summary>Show answer</summary>
+
+When they have **no common type** to convert to — e.g. `cond ? 5 : "hi"` (an `int` and a `const char*`). Same type isn't required; a common/convertible type is.
+
+</details>
+
+**Q144. Why does `cout << c ? "a" : "b";` need parentheses?**
+
+<details><summary>Show answer</summary>
+
+Because `<<` has **higher precedence** than `?:`, so it parses as `(cout << c) ? "a" : "b"` — it prints `c`, then applies `?:` to the stream (broken). `cout << (c ? "a" : "b")` forces the ternary first.
+
+</details>
+
+**Q145. Is the branch that isn't chosen evaluated?**
+
+<details><summary>Show answer</summary>
+
+No — only the chosen branch is evaluated. That's what makes `p ? *p : 0` safe: `*p` runs only when `p` is non-null.
+
+</details>
+
+### 34 — Creating / Instantiating Objects  (6 Qs)
+**Q146. What are the two places an object can live, and how does each affect its lifetime?**
+
+<details><summary>Show answer</summary>
+
+The **stack** and the **heap**. A stack object (`Entity e;`) has **automatic** lifetime — destroyed when it leaves scope, with its destructor called for you. A heap object (`new Entity`) has **manual** lifetime — it lives until you `delete` it, so it can outlive the scope (but leaks if you forget).
+
+</details>
+
+**Q147. Why do you access a heap object with `->` but a stack object with `.`?**
+
+<details><summary>Show answer</summary>
+
+`new` gives you a **pointer**, not the object itself, so you must go through the pointer: `p->x`, which is shorthand for `(*p).x` (dereference, then dot). A stack variable *is* the object, so you use `.` directly.
+
+</details>
+
+**Q148. What is a memory leak and what causes it?**
+
+<details><summary>Show answer</summary>
+
+Heap memory that was allocated with `new` but never `delete`d. The program still owns the address but nothing uses it and nothing else can reuse it, so memory is wasted until the program exits.
+
+</details>
+
+**Q149. What is a dangling pointer? Give two ways to create one.**
+
+<details><summary>Show answer</summary>
+
+A pointer holding an address whose object no longer exists — using it is undefined behaviour. Two ways: (1) point at a **stack object** and let it go out of scope; (2) `delete` a heap object but keep using the pointer (**use-after-delete**).
+
+</details>
+
+**Q150. Why set a pointer to `nullptr` after `delete`?**
+
+<details><summary>Show answer</summary>
+
+After `delete` the pointer still holds the freed address (dangling). Setting it to `nullptr` marks it as 'points to nothing' so you can test it, and because `delete nullptr;` is a safe no-op, it also protects against an accidental **double-delete**.
+
+</details>
+
+**Q151. What does `Entity e();` actually declare?**
+
+<details><summary>Show answer</summary>
+
+A **function** named `e` taking no arguments and returning an `Entity` — not an object (the 'most vexing parse'). To make an object use `Entity e;` or `Entity e{};`.
+
+</details>
+
+### 35 — The new Keyword  (6 Qs)
+**Q152. What two things does `new` do?**
+
+<details><summary>Show answer</summary>
+
+It (1) **allocates** memory on the heap (via `operator new`, usually `malloc` underneath) and (2) **calls the constructor** on that memory. It returns a typed pointer. (`delete` does the reverse: destructor, then free.)
+
+</details>
+
+**Q153. How does `new` differ from `malloc`? (three ways)**
+
+<details><summary>Show answer</summary>
+
+`new` **calls the constructor** (and `delete` the destructor); `new` returns a **typed pointer** (no cast) while `malloc` returns `void*`; and `new` **throws `std::bad_alloc`** on failure while `malloc` returns `nullptr`.
+
+</details>
+
+**Q154. Why must `new[]` be paired with `delete[]` and not plain `delete`?**
+
+<details><summary>Show answer</summary>
+
+`new[]` stores a **count** of the elements; `delete[]` reads it and runs the destructor for **every** element before freeing. Plain `delete` runs at most one destructor and mismatches the allocation bookkeeping → undefined behaviour.
+
+</details>
+
+**Q155. What is the difference between `delete` and `free`?**
+
+<details><summary>Show answer</summary>
+
+`delete` first **calls the destructor**, then frees the memory (via `operator delete`, usually `free`). `free` only frees the raw memory — no destructor. So `delete` = destructor + free; `free` = free only.
+
+</details>
+
+**Q156. `free`/`delete` are given only `p` — how do they know where the header is and how big the block is?**
+
+<details><summary>Show answer</summary>
+
+The **header offset** is a fixed constant compiled into the allocator, so it computes `p - headerSize` to reach the header from just `p`. The **block size** is stored *inside* that header, so it reads it once the header is found.
+
+</details>
+
+**Q157. What is the difference between `new int;` and `new int();`?**
+
+<details><summary>Show answer</summary>
+
+`new int` allocates the memory but leaves the value **indeterminate** (garbage). `new int()` **value-initializes** it to 0. (For a class with a default constructor, both forms run it — the difference only matters for plain types.)
+
+</details>
+
+### 36 — Implicit Conversion & explicit  (5 Qs)
+**Q158. What makes a constructor a 'converting constructor'?**
+
+<details><summary>Show answer</summary>
+
+A constructor callable with a **single argument** (and not marked `explicit`). The compiler can use it to implicitly convert that argument's type into the class — e.g. `Entity(int)` lets `Entity e = 22;` work.
+
+</details>
+
+**Q159. Exactly why does `Entity e = "Anup";` fail?**
+
+<details><summary>Show answer</summary>
+
+Because it would need **two** user-defined conversions: `const char*` -> `std::string` -> `Entity`. The compiler allows **at most one** user-defined conversion in a chain. `Entity e = std::string("Anup");` works because that's only one.
+
+</details>
+
+**Q160. What does the `explicit` keyword do?**
+
+<details><summary>Show answer</summary>
+
+It marks a constructor (or conversion operator) as usable only for **direct/explicit** construction, disabling **implicit** conversion through it. So `Entity e = 22;` becomes an error while `Entity e(22);` still works.
+
+</details>
+
+**Q161. With an `explicit` constructor, which works: `Entity e = 22;` or `Entity e(22);`? Why?**
+
+<details><summary>Show answer</summary>
+
+`Entity e(22);` works — that's **direct initialization**, which `explicit` allows. `Entity e = 22;` is **copy initialization**, which relies on implicit conversion, and that's exactly what `explicit` blocks.
+
+</details>
+
+**Q162. Why is marking single-argument constructors `explicit` often a good idea?**
+
+<details><summary>Show answer</summary>
+
+To stop **accidental/surprising** implicit conversions that hide bugs (e.g. `String s = 65;` silently building a 65-char string). `explicit` forces the caller to state intent; you drop it only when you truly want the implicit conversion.
+
+</details>
+
+### 37 — Operators & Operator Overloading  (5 Qs)
+**Q163. What is operator overloading, and why is it called compile-time polymorphism?**
+
+<details><summary>Show answer</summary>
+
+It defines what an operator (`+`, `==`, `<<`...) does for your own type — an operator is just a function with a special name. It's **compile-time** polymorphism because the compiler chooses which `operator` function to call from the **operand types** while compiling (unlike virtual functions, chosen at runtime).
+
+</details>
+
+**Q164. When must you use a free (non-member) operator instead of a member?**
+
+<details><summary>Show answer</summary>
+
+When the **left operand is not your class**. A member operator's left operand is always `this`, so for `cout << e` (left operand is `std::ostream`) or `2 * v` (left operand is `int`) you can't use a member — you write a free function taking both operands as parameters.
+
+</details>
+
+**Q165. Why must `operator<<` be a free function and return `std::ostream&`?**
+
+<details><summary>Show answer</summary>
+
+**Free** because its left operand is the stream (`std::ostream`), which you don't own and can't add members to. It **returns the stream by reference** so `<<` calls **chain**: `cout << a << b` groups as `(cout << a) << b`, and each `<<` must hand back the stream for the next one.
+
+</details>
+
+**Q166. Why does `operator+` return by value but `operator=` returns `*this` by reference?**
+
+<details><summary>Show answer</summary>
+
+`a + b` produces a **brand-new object**, so you return it **by value** (returning a reference to that local would dangle). `a = b` modifies the **existing** left object (which is `*this`), so you `return *this;` **by reference** — no copy, and it lets `a = b = c` chain.
+
+</details>
+
+**Q167. Give two limits on operator overloading.**
+
+<details><summary>Show answer</summary>
+
+Any two of: you can't invent new operators or change their precedence/arity; at least one operand must be a **user-defined type** (`int+int` can't be redefined); and `::`, `.`, `.*`, `?:`, `sizeof` can't be overloaded at all.
+
+</details>
+
+### 38 — The this Keyword  (5 Qs)
+**Q168. What is `this`, and where is it available?**
+
+<details><summary>Show answer</summary>
+
+`this` is a pointer holding the **address of the current object** — the object a member function was called on. It exists inside every **non-static** member function (static functions don't have it).
+
+</details>
+
+**Q169. What is the type of `this` in a non-const vs a const member function?**
+
+<details><summary>Show answer</summary>
+
+Non-const method: `Entity* const` — a const pointer to a non-const object (you can modify the object, not reseat the pointer). Const method: `const Entity* const` — you can't modify the object either. The trailing `const` after the parameter list makes it a const member function.
+
+</details>
+
+**Q170. What is the difference between `this` and `*this`?**
+
+<details><summary>Show answer</summary>
+
+`this` is the **pointer** (the object's address); `*this` is the **object** itself (dereferenced). You return `*this` **by reference** (`Entity&`) to hand back the same object for chaining; returning `this` would return the address (`Entity*`).
+
+</details>
+
+**Q171. When do you actually need to write `this->`?**
+
+<details><summary>Show answer</summary>
+
+Only to **disambiguate** a member from a **same-named parameter** (e.g. `this->a = a;`), or in some template code (dependent base-class names). Otherwise you can access members directly and `this->` is optional.
+
+</details>
+
+**Q172. Why does a `static` member function have no `this`?**
+
+<details><summary>Show answer</summary>
+
+Because it isn't tied to any particular object — you call it as `Class::fn()` with no instance. With no object, there's no address to put in `this`, which is also why a static function can only touch static members.
+
+</details>
+
+### 39 — Object Lifetime  (5 Qs)
+**Q173. Name the three storage durations and what determines each object's lifetime.**
+
+<details><summary>Show answer</summary>
+
+**Automatic** (stack): local variables, alive until the end of their scope. **Dynamic** (heap): created with `new`, alive until you `delete` it. **Static/global**: `static` locals, globals, static members — alive for the whole program.
+
+</details>
+
+**Q174. Why is returning the address of a local variable a bug?**
+
+<details><summary>Show answer</summary>
+
+The local lives in the function's stack frame, which is reclaimed when the function returns. The returned address then points to memory that's no longer valid — a **dangling** pointer — so using it is undefined behaviour.
+
+</details>
+
+**Q175. Give two correct ways to return data that outlives a function.**
+
+<details><summary>Show answer</summary>
+
+Any two of: **return by value** (the caller gets its own copy); allocate on the **heap** and transfer ownership (return the pointer / a smart pointer); or have the **caller pass in a buffer** (by reference/pointer) that the function fills.
+
+</details>
+
+**Q176. What is RAII, and why is it exception-safe?**
+
+<details><summary>Show answer</summary>
+
+RAII (Resource Acquisition Is Initialization): acquire a resource in the constructor and release it in the destructor. It's exception-safe because when an exception propagates, the **stack unwinds** and the destructors of all fully-constructed automatic objects run — so the resource is always released, even on an error path.
+
+</details>
+
+**Q177. Why does a `static` local variable keep its value between calls?**
+
+<details><summary>Show answer</summary>
+
+Because it has **static storage duration** (program lifetime) rather than automatic: it's created and initialized **once**, on first reach, and persists across calls. Only its *scope* is local; its *lifetime* is the whole program.
+
+</details>
+
+### 40 — Smart Pointers  (6 Qs)
+**Q178. What problem do smart pointers solve, and which mechanism makes them work?**
+
+<details><summary>Show answer</summary>
+
+They remove manual `new`/`delete` — no leaks, double-frees, or dangling. They work via **RAII**: the smart pointer's destructor `delete`s the owned object automatically when the smart pointer goes out of scope.
+
+</details>
+
+**Q179. What is the difference between `unique_ptr` and `shared_ptr`, and how does `shared_ptr` know when to delete?**
+
+<details><summary>Show answer</summary>
+
+`unique_ptr` has a **single** owner (can't be copied, only moved). `shared_ptr` allows **many** owners via a **reference count**: copying bumps it up, destruction bumps it down, and the object is deleted when the count reaches **0**.
+
+</details>
+
+**Q180. What is `weak_ptr` for, and why doesn't it affect the reference count?**
+
+<details><summary>Show answer</summary>
+
+It's a **non-owning** observer of a `shared_ptr`, used to **break circular references** (a cycle of shared_ptrs never reaches count 0 -> leak) and to safely check/access the object via `.lock()`. It doesn't count because it doesn't own the object — it only watches it.
+
+</details>
+
+**Q181. Why prefer `make_unique`/`make_shared` over raw `new`?**
+
+<details><summary>Show answer</summary>
+
+They're **exception-safe** and keep raw `new` out of your code. `make_shared` also does a **single allocation** for the object and its control block (vs two with `shared_ptr<T>(new T)`).
+
+</details>
+
+**Q182. What's the difference between `release()`, `reset()`, and `std::move` on a `unique_ptr`?**
+
+<details><summary>Show answer</summary>
+
+`release()` gives up ownership **without deleting** and returns the raw pointer (you must delete it). `reset()` **deletes** the owned object now. `std::move` **transfers** ownership to another `unique_ptr` (which will delete it); the source becomes null.
+
+</details>
+
+**Q183. When is a raw pointer the right choice over a smart pointer?**
+
+<details><summary>Show answer</summary>
+
+For **non-owning** references — 'borrowing' an object whose lifetime is managed elsewhere. You use it to read/call but never `delete` through it, and it's valid only while the real owner keeps the object alive (a reference is often even better when it can't be null).
+
+</details>
+
+### 41 — Copying & Copy Constructors  (5 Qs)
+**Q184. Name two situations where the copy constructor is called.**
+
+<details><summary>Show answer</summary>
+
+Any two of: initializing a new object from another (`T b = a;` or `T b(a);`), passing an object to a function **by value**, or returning an object **by value** (though that copy is often elided).
+
+</details>
+
+**Q185. What does the default copy constructor do, and why is that dangerous for a class with a pointer member?**
+
+<details><summary>Show answer</summary>
+
+It does a **shallow, member-wise copy** — copying each member's value. For a pointer that copies the **address**, so both objects point at the **same** heap buffer. Then both destructors `delete` it -> **double-free**, and changing one affects the other.
+
+</details>
+
+**Q186. What is a deep copy and how does it fix the double-free?**
+
+<details><summary>Show answer</summary>
+
+A deep copy allocates a **separate** buffer for the new object and copies the **contents** into it, so each object owns independent memory. Now each destructor deletes its own buffer — no shared pointer, no double-free.
+
+</details>
+
+**Q187. What is the Rule of Three (and Five)?**
+
+<details><summary>Show answer</summary>
+
+Rule of Three: if a class needs a custom **destructor**, it almost certainly also needs a custom **copy constructor** and **copy assignment operator** (all manage the same resource). Rule of Five (C++11) adds a **move constructor** and **move assignment** for efficiency.
+
+</details>
+
+**Q188. What is the difference between the copy constructor and copy assignment?**
+
+<details><summary>Show answer</summary>
+
+The copy **constructor** builds a **brand-new** object from an existing one (`T b = a;`). Copy **assignment** (`operator=`) is used when **both objects already exist** (`b = a;`): it must free its own old resource, deep-copy, guard against self-assignment, and `return *this`.
+
+</details>
+
+### 42 — The Arrow Operator  (4 Qs)
+**Q189. What is `e->a` equivalent to, written the long way?**
+
+<details><summary>Show answer</summary>
+
+`(*e).a` — dereference the pointer `e` with `*`, then use the dot to access the member. `->` just combines those two steps.
+
+</details>
+
+**Q190. For a raw pointer, is `->` built-in or overloaded — and when does overloading come in?**
+
+<details><summary>Show answer</summary>
+
+For a **raw pointer** it's **built-in**. Overloading `operator->` comes in for your **own classes** — smart pointers (`unique_ptr`/`shared_ptr`), iterators, and custom wrapper types define it so they can be used like pointers.
+
+</details>
+
+**Q191. What does an overloaded `operator->` return, and what does the compiler do with it?**
+
+<details><summary>Show answer</summary>
+
+It returns a **pointer**. The compiler then applies the real `->` to that returned pointer to reach the member — so `w->print()` becomes `w.operator->()->print()`. (If it returned another wrapper, `->` keeps chaining until it hits a raw pointer.)
+
+</details>
+
+**Q192. Why can you use `->` on a smart pointer even though it's an object, not a raw pointer?**
+
+<details><summary>Show answer</summary>
+
+Because the smart pointer **overloads `operator->`** (and `operator*`). So `p->method()` calls `p.operator->()` to get the raw pointer, then applies `->` to that — letting an object behave like a pointer.
 
 </details>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>31 chown &amp; Ownership — Study</title><style>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>39 Object Lifetime — Study</title><style>
 :root{--bg:#0e1118;--card:#171c26;--card2:#1e2431;--ink:#e8ecf5;--muted:#9aa4b8;--line:#28303f;
 --accent:#6ea8ff;--accent2:#54e0c0;--amber:#ffcf6b;--pink:#ff8aa0;--code:#0a0d15;}
 *{box-sizing:border-box}
@@ -68,11 +68,20 @@ details.ansbox[open]>summary{margin-bottom:10px;background:rgba(84,224,192,.16);
 .xbtn.ghost{background:var(--card2);color:var(--ink);border:1px solid var(--line)}
 .ansinput{width:100%;margin-top:10px;background:#0b0e16;border:1px solid var(--line);border-radius:9px;color:var(--ink);padding:10px 12px;font-family:inherit;font-size:14px;resize:vertical}
 .ansinput:focus{outline:none;border-color:var(--accent)}
-</style></head><body><div class="wrap"><div class="top"><a href="../index.html">&larr; All topics</a><span class="cat">Linux</span></div>
-<h1><span class="numbadge">31</span> &nbsp;chown &amp; Ownership</h1>
-<p class="summary">Change owner/group; only root can give a file away.</p>
-<div class="card keypoints"><h2>Must-remember points</h2><ul><li><code>chown user file</code>, <code>chown user:group file</code>, <code>chown :group file</code> (group only); <code>-R</code> = recursive. <code>chgrp group file</code> changes only the group.</li><li><strong>Only root (sudo) can change a file's owner</strong> — a regular user can't give their file away or take another's. The owner CAN change the group to one they belong to.</li><li>Ownership + rwx triplets together gate access: a process's UID/GID is checked against owner/group/other bits on every open/read/write.</li><li><code>id</code> = your UID/GID/groups; <code>whoami</code> = your username.</li><li>Systems relevance: deploying a service = chown binary/data to a service user; setuid / privilege-dropping daemons rely on ownership.</li></ul></div>
-<div class="card confuse"><h2>&#9888; Easily confused</h2><div class="pair"><div class="vs">chown vs chgrp</div><div class="d">chown changes owner (and optionally group); chgrp changes only the group.</div></div><div class="pair"><div class="vs">id vs whoami</div><div class="d"><code>id</code> shows your UID/GID and all groups; <code>whoami</code> shows just your username.</div></div></div>
-<div class="card testcta"><h2 style="margin-top:0">Test yourself</h2><p>4 single-focus questions on this topic (answer hidden behind its own button).</p><a class="bigbtn" href="../questions/master-question-sheet.html#chown-ownership">Go to chown &amp; Ownership questions &rarr;</a></div>
-<div class="nav"><a href="30-chmod.html">&larr; 30 chmod</a><a class="next" href="32-member-initializer-list.html">32 Member Initializer List &rarr;</a></div>
+</style></head><body><div class="wrap"><div class="top"><a href="../index.html">&larr; All topics</a><span class="cat">C++ Core</span></div>
+<h1><span class="numbadge">39</span> &nbsp;Object Lifetime</h1>
+<p class="summary">Automatic, dynamic, or static — how long an object lives, and RAII.</p>
+<div class="card keypoints"><h2>Must-remember points</h2><ul><li>Three storage durations: <strong>automatic</strong> (stack — lives to the end of its <code>{}</code> scope, dtor runs automatically), <strong>dynamic</strong> (heap — from <code>new</code> until <code>delete</code>, else leak), <strong>static/global</strong> (whole program).</li><li>'Lifetime = scope' applies only to <strong>automatic</strong> objects; within a scope they're destroyed in <strong>reverse</strong> order of creation.</li><li>Returning <code>&amp;x</code> / a reference to a local = <strong>dangling</strong> (its stack frame is gone). Fixes: return by value, heap + transfer ownership, or a caller-supplied buffer.</li><li><strong>RAII</strong>: acquire a resource in the constructor, release it in the destructor -&gt; cleanup is automatic and <strong>exception-safe</strong> (destructors run during stack unwinding). Basis of smart pointers, <code>lock_guard</code>, <code>fstream</code>.</li><li>C++ gives <strong>deterministic</strong> cleanup — objects die at predictable scope-exit points (unlike garbage-collected languages).</li><li>A temporary lives to the end of the full expression (<code>;</code>); a temporary bound to a <code>const</code> reference has its lifetime <strong>extended</strong> to the reference.</li></ul></div>
+<h2>Dangling vs valid, RAII, and a static local</h2><pre>int* bad()  { int x = 5; return &amp;x; }   // dangling: x dies at }
+int  good() { int x = 5; return x;  }   // fine: value copied out
+
+void demo() {
+    std::lock_guard&lt;std::mutex&gt; lock(m); // RAII: lock acquired here
+    // ... even if the code below throws ...
+}                                        // dtor runs at scope exit -&gt; lock released
+
+int next() { static int n = 0; return ++n; }  // 1, 2, 3... kept across calls</pre>
+<div class="card confuse"><h2>&#9888; Easily confused</h2><div class="pair"><div class="vs">automatic vs dynamic vs static lifetime</div><div class="d">Automatic (stack): to the end of scope. Dynamic (heap): until you <code>delete</code>. Static/global: the whole program.</div></div><div class="pair"><div class="vs">dangling vs valid return</div><div class="d">Return <code>&amp;local</code> = dangling (frame gone). Return by value, or heap + ownership, or a caller-supplied buffer = valid.</div></div><div class="pair"><div class="vs">RAII vs manual cleanup</div><div class="d">RAII: the destructor releases automatically at scope exit (even on exceptions). Manual: you must remember to free/close/unlock — easy to forget.</div></div></div>
+<div class="card testcta"><h2 style="margin-top:0">Test yourself</h2><p>5 single-focus questions on this topic (answer hidden behind its own button).</p><a class="bigbtn" href="../questions/master-question-sheet.html#object-lifetime">Go to Object Lifetime questions &rarr;</a></div>
+<div class="nav"><a href="38-this-keyword.html">&larr; 38 The this Keyword</a><a class="next" href="40-smart-pointers.html">40 Smart Pointers &rarr;</a></div>
 <footer>Anup &middot; C++/Linux/Systems study &middot; reference page</footer></div></body></html>
